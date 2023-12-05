@@ -21,10 +21,6 @@ public class TransferMapper {
                     new Client(dto.getSenderRef())
             );
 
-            setRecipient(
-                    new Recipient(dto.getRecipientId())
-            );
-
         }};
 
         // copy the properties from dto to record

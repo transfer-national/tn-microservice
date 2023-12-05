@@ -1,12 +1,18 @@
 package ma.ensa.transferservice.dto;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ma.ensa.transferservice.models.enums.FeeType;
 import ma.ensa.transferservice.models.enums.TransferType;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TransferDto {
 
     private Long senderRef;

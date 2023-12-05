@@ -6,6 +6,7 @@ import ma.ensa.transferservice.dto.TransferDto;
 import ma.ensa.transferservice.mapper.TransferMapper;
 import ma.ensa.transferservice.models.Transfer;
 import ma.ensa.transferservice.models.TransferStatusHistory;
+import ma.ensa.transferservice.models.User;
 import ma.ensa.transferservice.models.enums.TransferStatus;
 import ma.ensa.transferservice.models.enums.TransferType;
 import ma.ensa.transferservice.repositories.TSHRepository;
@@ -34,23 +35,19 @@ public class TransferServiceImpl implements TransferService {
         restTemplate = new RestTemplate();
     }
 
-    private String getSironUrl(){
+    private String getServiceUrl(String serviceId){
         return loadBalancerClient
-                .choose("siron-service")
+                .choose(serviceId+"-service")
                 .getUri()
                 .toString();
     }
 
-    @Override
-    public long emitTransfer(TransferDto dto) {
-
+    private void callSironForSender(long ref){
         final String path = String.format(
                 "%s/sender/%d",
-                getSironUrl(),
-                dto.getSenderRef()
+                getServiceUrl("siron"), ref
         );
 
-        // TODO: call SIRON
         Boolean bl = restTemplate.getForObject(
                 path, Boolean.class
         );
@@ -58,11 +55,19 @@ public class TransferServiceImpl implements TransferService {
         if(bl != null && !bl){
             throw new RuntimeException("the sender is black listed");
         }
+    }
+
+    @Override
+    public long emitTransfer(TransferDto dto) {
+
+        // call siron
+        callSironForSender(dto.getSenderRef());
 
         // if the transferType is DEBIT OR WALLET
         if(dto.getTransferType() != TransferType.CASH ){
             // TODO: debit from the account(REST CALL)
             // and have to be completed successfully
+            // otherwise complete
         }
 
         // dto ---> transfer
@@ -70,6 +75,17 @@ public class TransferServiceImpl implements TransferService {
 
         // persist the instance into the database
         transfer = transferRepository.save(transfer);
+
+        // create transfer status
+        var tsh = TransferStatusHistory.builder()
+                .byUser(new User(dto.getSentById()))
+                .reason(dto.getReason())
+                .transfer(transfer)
+                .status(TO_SERVE)
+                .build();
+
+        // save the status into the database
+        tshRepository.save(tsh);
 
         // return the ref
         return transfer.getRef();
@@ -79,8 +95,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferStatus getTransferStatus(long ref) {
         return tshRepository
-                .findTransferStatusByRef(ref)
-                .orElse(TO_SERVE);
+                .findTransferStatusByRef(ref);
     }
 
     @Override

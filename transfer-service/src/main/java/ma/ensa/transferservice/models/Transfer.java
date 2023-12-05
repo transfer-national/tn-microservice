@@ -8,11 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.ensa.transferservice.config.TransferConfig;
 import ma.ensa.transferservice.models.enums.FeeType;
+import ma.ensa.transferservice.models.enums.TransferStatus;
 import ma.ensa.transferservice.models.enums.TransferType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 import static java.time.LocalDateTime.*;
@@ -44,15 +46,10 @@ public class Transfer {
 
     private FeeType feeType;
 
-    @CreationTimestamp
-    private LocalDateTime sendAt;
+    private boolean notificationEnabled;
 
-    @ManyToOne
-    private Account sentBy;
-
-    private String reason;
-
-    private boolean isNotificationEnabled;
+    @OneToMany(mappedBy = "transfer")
+    private List<TransferStatusHistory> statusHistories;
 
     @PrePersist
     public void init(){
@@ -75,20 +72,29 @@ public class Transfer {
     }
 
     public double getAmountForTheRecipient(){
-
         double fee = transferConfig.getTransferFee();
-
         return amount - (fee - getFeeForTheSender());
+    }
 
+    public LocalDateTime getSentAt(){
+
+        return statusHistories
+                .stream()
+                .filter(s -> s.getStatus() == TransferStatus.TO_SERVE)
+                .findFirst()
+                .orElseThrow(RuntimeException::new)
+                .getUpdatedAt();
     }
 
     public boolean isValid(){
-        return sendAt.plusDays(transferConfig.getDaysOfValidity())
-              .isAfter(now());
+        return getSentAt()
+                .plusDays(transferConfig.getDaysOfValidity())
+                .isAfter(now());
     }
 
     public boolean isClaimable(){
-        return sendAt.plusDays(transferConfig.getDaysOfClaiming())
+        return getSentAt()
+                .plusDays(transferConfig.getDaysOfClaiming())
                 .isAfter(now());
     }
 
