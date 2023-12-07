@@ -1,5 +1,6 @@
-package ma.ensa.authservice.services;
+package ma.ensa.authservice.config;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,18 +14,19 @@ import static java.time.ZoneId.systemDefault;
 
 @Configuration
 @ConfigurationProperties("jwt")
+@Data
 public class JwtConfig {
 
 
     private String secretKey;
 
-    private Long dayOfValidity;
+    private Long daysOfValidity;
 
 
     public Date getExpirationDate() {
 
         return Date.from(LocalDateTime.now()
-                .plusDays(dayOfValidity)
+                .plusDays(daysOfValidity)
                 .atZone(systemDefault())
                 .toInstant()
         );

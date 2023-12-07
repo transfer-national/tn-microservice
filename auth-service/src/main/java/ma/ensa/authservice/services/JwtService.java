@@ -1,4 +1,4 @@
-package ma.ensa.authservice.config;
+package ma.ensa.authservice.services;
 
 
 import io.jsonwebtoken.Claims;
@@ -8,7 +8,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.authservice.exceptions.TokenExpiredException;
-import ma.ensa.authservice.services.JwtConfig;
+import ma.ensa.authservice.config.JwtConfig;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 

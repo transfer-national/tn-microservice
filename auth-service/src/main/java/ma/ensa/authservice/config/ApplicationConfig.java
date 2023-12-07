@@ -18,10 +18,10 @@ public class ApplicationConfig {
     private final UserService userService;
 
     @Bean
-    public AuthenticationProvider authenticationProvider(PasswordEncoder encoder){
+    public AuthenticationProvider authenticationProvider(){
         return new DaoAuthenticationProvider(){{
             setUserDetailsService(userService);
-            setPasswordEncoder(encoder);
+            setPasswordEncoder(passwordEncoder());
         }};
 
     }

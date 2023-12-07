@@ -1,2 +1,4 @@
-package ma.ensa.authservice.exceptions;public class UserNotFoundException {
+package ma.ensa.authservice.exceptions;
+
+public class UserNotFoundException extends RuntimeException{
 }
