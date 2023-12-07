@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ma.ensa</groupId>
-    <artifactId>discovery-service</artifactId>
+    <artifactId>discovery</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>discovery-service</name>
     <description>discovery-service</description>
