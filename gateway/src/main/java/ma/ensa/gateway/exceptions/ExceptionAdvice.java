@@ -11,7 +11,13 @@ public class ExceptionAdvice {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(MissingAuthToken.class)
-    public Mono<String> handleException(Exception ex){
+    public Mono<String> handleMissingToken(Exception ex){
+        return Mono.just(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedAccess.class)
+    public Mono<String> handleUnauthorized(Exception ex){
         return Mono.just(ex.getMessage());
     }
 

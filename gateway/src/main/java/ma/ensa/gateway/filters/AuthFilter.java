@@ -1,6 +1,7 @@
-package ma.ensa.gateway.filter;
+package ma.ensa.gateway.filters;
 
 import lombok.extern.log4j.Log4j2;
+import ma.ensa.gateway.config.AuthorizedPathConfig;
 import ma.ensa.gateway.dto.AuthResponse;
 import ma.ensa.gateway.exceptions.MissingAuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 import static java.util.Objects.requireNonNull;
-import static ma.ensa.gateway.filter.AuthFilter.Config;
+import static ma.ensa.gateway.filters.AuthFilter.Config;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
@@ -22,7 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class AuthFilter extends AbstractGatewayFilterFactory<Config> {
 
     @Autowired
-    private RouteValidator validator;
+    private AuthorizedPathConfig authorizedPath;
 
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -38,20 +42,21 @@ public class AuthFilter extends AbstractGatewayFilterFactory<Config> {
 
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
+        // from request get path and the headers
         var path = exchange.getRequest().getURI().getPath();
-
-        log.debug("{} = {}", NAME_KEY, VALUE_KEY);
-
         var headers = exchange.getRequest().getHeaders();
 
         // get the token
         var token = getToken(headers);
 
+        // validate the token and check the authorization
+        // by role
         return validateToken(token)
-                .doOnNext(r -> {
-                    validator.validateByRole(path, r.getRole());
-
-                }).then(chain.filter(exchange));
+            .doOnNext(r ->
+                authorizedPath.validateByRole(path, r.getRole())
+            ).then(
+                chain.filter(exchange)
+            );
     }
 
     private String getToken(HttpHeaders headers) {
@@ -74,7 +79,6 @@ public class AuthFilter extends AbstractGatewayFilterFactory<Config> {
                 .retrieve()
                 .bodyToMono(AuthResponse.class);
     }
-
 
     public static class Config{
         // add custom configurations

@@ -1,4 +1,4 @@
-package ma.ensa.gateway;
+package ma.ensa.gateway.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

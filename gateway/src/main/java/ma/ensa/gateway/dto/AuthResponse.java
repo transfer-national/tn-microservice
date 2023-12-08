@@ -1,4 +1,4 @@
-package ma.ensa.gateway;
+package ma.ensa.gateway.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
 
     private String token;
+
+    private Role role;
 
 
 }
