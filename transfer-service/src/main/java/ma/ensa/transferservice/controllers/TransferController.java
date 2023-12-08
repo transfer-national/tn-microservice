@@ -3,9 +3,12 @@ package ma.ensa.transferservice.controllers;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.dto.request.CancelDto;
+import ma.ensa.transferservice.dto.request.RevertDto;
+import ma.ensa.transferservice.dto.request.SendDto;
+import ma.ensa.transferservice.dto.request.ServeDto;
 import ma.ensa.transferservice.models.Transfer;
 import ma.ensa.transferservice.services.TransferService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +26,10 @@ public class TransferController {
 
     private final TransferService service;
 
+    @GetMapping("/test")
+    public String test(){
+        return "hello world";
+    }
 
     @GetMapping
     public List<?> getAllTransfers(
@@ -40,8 +47,8 @@ public class TransferController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Long emitTransfer(
-            @RequestBody TransferRequestDto dto
+    public List<Long> emitTransfer(
+            @RequestBody SendDto dto
     ){
         return service.emitTransfer(dto);
     }
@@ -49,7 +56,7 @@ public class TransferController {
     @PutMapping("/{ref}/serve")
     public String serveTransfer(
             @PathVariable(required = false) long ref,
-            @RequestBody PaymentDto dto
+            @RequestBody ServeDto dto
     ){
         dto.setRef(ref);
         service.serveTransfer(dto);
@@ -57,22 +64,21 @@ public class TransferController {
     }
 
     @PutMapping("/{ref}/revert")
-    public String revertTransfer(
+    public RevertResponseDto revertTransfer(
             @PathVariable long ref,
             @RequestBody RevertDto dto
     ){
         dto.setRef(ref);
-        service.revertTransfer(dto);
-        return "reverted successfully";
+        return service.revertTransfer(dto);
     }
 
     @PutMapping("/{ref}/cancel")
-    public String cancelTransfer(
+    public CancelResponseDto cancelTransfer(
             @PathVariable long ref,
-            @RequestBody PaymentDto dto
+            @RequestBody CancelDto dto
     ){
         dto.setRef(ref);
-        return "cancelled successfully";
+        return service.cancelTransfer(dto);
     }
 
 

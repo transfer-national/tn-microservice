@@ -20,10 +20,7 @@ import static java.time.LocalDateTime.now;
 @Builder
 
 @Entity
-public class Transfer {
-
-    @Setter @Value("${transfer.fee}")
-    private static TransferConfig config;
+public class Transfer implements Cloneable{
 
 
     @Id
@@ -43,8 +40,10 @@ public class Transfer {
 
     private boolean notificationEnabled;
 
+    private long groupId;
+
     @OneToMany(mappedBy = "transfer")
-    private List<TransferStatusDetail> statusHistories;
+    private List<TransferStatusDetails> statuses;
 
     @PrePersist
     public void init(){
@@ -57,30 +56,17 @@ public class Transfer {
         );
     }
 
-    public double getFeeForSender(){
-        double fee = config.getFee();
-        return switch (feeType){
-            case SENDER -> fee;
-            case FIFTY_FIFTY -> fee/2;
-            default -> 0;
-        };
-    }
-
-    public double getAmountForTheRecipient(){
-        return amount - (config.getFee() - getFeeForSender());
-    }
-
-    public TransferStatusDetail getSendingDetails(){
-        return statusHistories.stream()
+    public TransferStatusDetails getSendingDetails(){
+        return statuses.stream()
                 .findFirst()
                 .orElseThrow();
     }
 
-    public TransferStatusDetail getStatusDetails(){
+    public TransferStatusDetails getStatusDetails(){
         // find the last status
-        return statusHistories.stream()
+        return statuses.stream()
                 .reduce((f,s) -> s)
-                .orElseThrow();
+                .orElseThrow(); // unexpected exception
     }
 
     public LocalDateTime getSentAt(){
@@ -88,16 +74,17 @@ public class Transfer {
             .getUpdatedAt();
     }
 
-    public boolean isValid(){
-        return getSentAt()
-                .plusDays(config.getDaysOfValidity())
-                .isAfter(now());
+    public boolean isMultiple(){
+        return groupId != 0L;
     }
 
-    public boolean isClaimable(){
-        return getSentAt()
-                .plusDays(config.getDaysOfClaiming())
-                .isAfter(now());
+    @Override
+    public Transfer clone() {
+        try {
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return (Transfer) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
-
 }

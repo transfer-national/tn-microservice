@@ -1,16 +1,17 @@
 package ma.ensa.transferservice.repositories;
 
 import ma.ensa.transferservice.models.Transfer;
-import ma.ensa.transferservice.models.enums.TransferStatusDetail;
+import ma.ensa.transferservice.models.TransferStatusDetails;
+import ma.ensa.transferservice.models.enums.TransferStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TsdRepository extends JpaRepository<ma.ensa.transferservice.models.TransferStatusDetail, Long> {
+public interface TsdRepository extends JpaRepository<TransferStatusDetails, Long> {
 
-    List<TransferStatusDetail> findAllByTransfer(Transfer transfer);
+    List<TransferStatus> findAllByTransfer(Transfer transfer);
 
 
-    TransferStatusDetail findByTransferOrderByIdDesc(Transfer transfer);
+    TransferStatus findByTransferOrderByIdDesc(Transfer transfer);
 
 }

@@ -1,12 +1,16 @@
 package ma.ensa.transferservice.services.impl;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import ma.ensa.transferservice.dto.ClientDto;
+import ma.ensa.transferservice.models.Client;
+import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.enums.ClientType;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -14,46 +18,32 @@ import org.springframework.web.client.RestTemplate;
 public class RestCall {
 
 
-    private final LoadBalancerClient loadBalancerClient;
+    private final RestTemplate restTemplate;
 
 
-    private RestTemplate restTemplate;
 
-    @PostConstruct
-    public void init(){
-        restTemplate = new RestTemplate();
-    }
+    public void callSiron(long ref, ClientType type){
 
-    private String getServiceUrl(String serviceId){
-        return loadBalancerClient
-                .choose(serviceId+"-service")
-                .getUri()
-                .toString();
-    }
+        var str = type.name().toLowerCase();
 
-    public void callSiron(long ref, ClientType clientType){
+        final String path =
+            String.format("lb://siron-service/%s/%d",str, ref);
 
-        final String path;
+        Boolean bl = null;
 
-        try{
-            path = String.format("%s/%s/%d",
-                    getServiceUrl("siron"),
-                    clientType.toString().toLowerCase(),
-                    ref
+        try {
+            bl = restTemplate.getForObject(
+                    path, Boolean.class
             );
-        }catch (Exception ignored){
-            log.warn("the SIRON service is DOWN");
-            return;
+        }catch (Exception ex){
+            log.warn("siron service is DOWN !!");
         }
 
-        Boolean bl = restTemplate.getForObject(
-                path, Boolean.class
-        );
 
         if(bl != null && bl){
             String em = String.format(
                     "the %s is black listed",
-                    clientType.toString().toLowerCase()
+                    type.toString().toLowerCase()
             );
             throw new RuntimeException(em);
         }
@@ -78,6 +68,25 @@ public class RestCall {
 
     public void debitAccount() {
 
+    }
+
+    public ClientDto getSender(Client sender) {
+        return restTemplate.getForObject(
+            "lb://client-service/client/{ref}",
+            ClientDto.class, sender.getRef()
+        );
+    }
+
+    public ClientDto getRecipient(Recipient recipient) {
+
+        return Optional.of(recipient.getKycRef())
+            .map(this::getSender)
+            .orElse(
+                restTemplate.getForObject(
+                    "lb://client-service/recipient/{id}",
+                    ClientDto.class, recipient.getId()
+                )
+            );
 
     }
 }

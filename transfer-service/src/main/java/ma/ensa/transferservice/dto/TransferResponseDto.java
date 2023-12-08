@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.ensa.transferservice.models.Client;
-import ma.ensa.transferservice.models.TransferStatusDetail;
+import ma.ensa.transferservice.models.TransferStatusDetails;
 
 import java.util.List;
 
@@ -20,9 +19,9 @@ public class TransferResponseDto {
 
     private double amount;
 
-    private Client sender;
+    private ClientDto sender;
 
-    private Client recipient;
+    private ClientDto recipient;
 
-    private List<TransferStatusDetail> statuses;
+    private List<TransferStatusDetails> statuses;
 }

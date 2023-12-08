@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static ma.ensa.transferservice.models.enums.TransferStatusDetail.*;
+import static ma.ensa.transferservice.models.enums.TransferStatus.*;
 
 @Component
 public class TransferChecker {
@@ -24,8 +24,6 @@ public class TransferChecker {
 
 
     public void checkRevert(Transfer transfer, String byUser){
-
-        checkServe(transfer);
 
         // check the ability to revert
         var sendingDetails = transfer.getSendingDetails();

@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentDto {
+public class ClientDto {
 
-    private long ref;
+    private String firstName;
 
-    private boolean toWallet;
+    private String lastName;
 
-    private String userId;
+    private String idNumber;
+
+    private String gsm;
 
 }

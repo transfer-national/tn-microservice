@@ -2,8 +2,8 @@ package ma.ensa.transferservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import ma.ensa.transferservice.dto.PaymentDto;
-import ma.ensa.transferservice.dto.TransferRequestDto;
+import ma.ensa.transferservice.dto.request.ServeDto;
+import ma.ensa.transferservice.dto.request.SendDto;
 import ma.ensa.transferservice.models.enums.FeeType;
 import ma.ensa.transferservice.models.enums.TransferType;
 import org.junit.jupiter.api.*;
@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -41,15 +43,15 @@ public class TransferMockTest {
     @Test @Order(1)
     public void testEmitTransfer() throws Exception {
 
-        TransferRequestDto dto = TransferRequestDto.builder()
+        var dto = SendDto.builder()
                 .senderRef(1L)
-                .recipientId(1L)
+                .recipientIds(List.of(1L))
                 .amount(1000)
                 .feeType(FeeType.SENDER)
                 .transferType(TransferType.CASH)
                 .isNotificationEnabled(true)
                 .reason("gift")
-                .sentById("a-123") // agent ID
+                .userId("a-123") // agent ID
                 .build();
 
         var json = objectMapper.writeValueAsString(dto);
@@ -74,7 +76,7 @@ public class TransferMockTest {
 
         if(ref == 0L) ref = 1973939389118L;
 
-        var dto = PaymentDto.builder()
+        var dto = ServeDto.builder()
                 .userId("a-123")
                 .toWallet(false)
                 .build();

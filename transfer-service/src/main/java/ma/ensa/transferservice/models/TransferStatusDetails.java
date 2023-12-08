@@ -2,6 +2,7 @@ package ma.ensa.transferservice.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ma.ensa.transferservice.models.enums.TransferStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 
 @Entity
-public class TransferStatusDetail {
+public class TransferStatusDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -24,7 +25,7 @@ public class TransferStatusDetail {
     @ManyToOne
     private User byUser; // AGENT, WALLET, GAP, OR BACK OFFICE
 
-    private ma.ensa.transferservice.models.enums.TransferStatusDetail status;
+    private TransferStatus status;
 
     private String reason;
 
