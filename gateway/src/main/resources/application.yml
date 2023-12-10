@@ -1,0 +1,60 @@
+spring:
+    application:
+        name: gateway
+
+    cloud:
+        gateway:
+
+            discovery:
+                locator:
+                    enabled: true
+                    lower-case-service-id: true
+            routes:
+                # auth route
+                - id: auth
+                  uri: lb://auth-service
+                  predicates:
+                    - Path=/auth/**
+                # transfer route
+                - id: transfer
+                  uri: lb://transfer-service
+                  predicates:
+                    - Path=/transfer/**
+                  filters:
+                    - AuthFilter
+                # wallet route
+                - id: wallet
+                  uri: lb://wallet-service
+                  predicates:
+                    - Path=/wallet/**
+                  filters:
+                    - PrefixPath=/wallet
+                    - AuthFilter
+                # client route
+                - id: client
+                  uri: lb://client-service
+                  predicates:
+                    - Path=/client/**
+                  filters:
+                   - PrefixPath=/client
+                   - AuthFilter
+                # discovery route
+                -   id: discovery
+                    uri: http://localhost:8761
+                    predicates:
+                        - Path=/eureka/**
+
+server.port: 8080
+
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    instance:
+        prefer-ip-address: true
+
+
+
+authorized-paths.paths:
+    /transfer/{id}/cancel: BACK_OFFICE
+    /transfer/** : AGENT
