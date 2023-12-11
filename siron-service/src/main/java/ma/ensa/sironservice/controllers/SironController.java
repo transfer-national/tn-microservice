@@ -1,7 +1,9 @@
 package ma.ensa.sironservice.controllers;
 
 import lombok.RequiredArgsConstructor;
+import ma.ensa.sironservice.models.BlackListedClient;
 import ma.ensa.sironservice.services.SironService;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,18 +16,18 @@ public class SironController {
 
     private final SironService service;
 
-    @GetMapping("/sender/{ref}")
-    public boolean checkTransferForSender(
-            @PathVariable("ref") long ref
+    @GetMapping("/sender/{clRef}")
+    public BlackListedClient checkTransferForSender(
+            @PathVariable long clRef
     ){
-        return service.isSenderBlackListed(ref);
+        return service.isSenderBlackListed(clRef);
     }
 
-    @GetMapping("/recipient/{ref}")
-    public boolean checkTransferForRecipient(
-            @PathVariable("ref") long ref
+    @GetMapping("/transfer/{txRef}")
+    public BlackListedClient checkTransferForRecipient(
+            @PathVariable long txRef
     ){
-        return service.isRecipientBlackListed(ref);
+        return service.isRecipientBlackListed(txRef);
     }
 
 }

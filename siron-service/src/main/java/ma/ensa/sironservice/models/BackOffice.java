@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Client {
+public class BackOffice {
 
     @Id
-    private long ref;
+    private String id;
 
 }
