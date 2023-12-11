@@ -24,7 +24,3 @@ eureka:
 server:
     port: 0
 
-transfer:
-    daysOfValidity: 7
-    daysOfClaiming: 14
-    fee: 20
