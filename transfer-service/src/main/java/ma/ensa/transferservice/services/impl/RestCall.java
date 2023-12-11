@@ -3,13 +3,14 @@ package ma.ensa.transferservice.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ma.ensa.transferservice.dto.ClientDto;
+import ma.ensa.transferservice.dto.SironResponseDto;
+import ma.ensa.transferservice.exceptions.BlackListedException;
 import ma.ensa.transferservice.models.Client;
 import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.enums.ClientType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -20,34 +21,24 @@ public class RestCall {
 
     private final RestTemplate restTemplate;
 
-
-
     public void callSiron(long ref, ClientType type){
 
-        var str = type.name().toLowerCase();
+        var t2s = type.name().toLowerCase();
 
-        final String path =
-            String.format("lb://siron-service/%s/%d",str, ref);
-
-        Boolean bl = null;
+        SironResponseDto result = null;
 
         try {
-            bl = restTemplate.getForObject(
-                    path, Boolean.class
+            result = restTemplate.getForObject(
+                String.format("lb://siron-service/%s/%d",t2s, ref),
+                SironResponseDto.class
             );
         }catch (Exception ex){
             log.warn("siron service is DOWN !!");
         }
 
-
-        if(bl != null && bl){
-            String em = String.format(
-                    "the %s is black listed",
-                    type.toString().toLowerCase()
-            );
-            throw new RuntimeException(em);
+        if(result != null){
+            throw new BlackListedException(result.getReason());
         }
-
 
     }
 

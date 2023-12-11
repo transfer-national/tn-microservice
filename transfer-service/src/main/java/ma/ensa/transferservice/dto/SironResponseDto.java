@@ -1,2 +1,10 @@
-package ma.ensa.sironservice.dto;public class SironResponseDto {
+package ma.ensa.transferservice.dto;
+
+import lombok.Data;
+
+@Data
+public class SironResponseDto {
+
+    private String reason;
+
 }

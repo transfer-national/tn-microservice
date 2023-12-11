@@ -2,31 +2,26 @@ package ma.ensa.transferservice.services;
 
 
 import ma.ensa.transferservice.dto.*;
-import ma.ensa.transferservice.dto.request.CancelDto;
-import ma.ensa.transferservice.dto.request.RevertDto;
-import ma.ensa.transferservice.dto.request.SendDto;
-import ma.ensa.transferservice.dto.request.ServeDto;
-import ma.ensa.transferservice.models.Transfer;
 
 import java.util.List;
 
 
 public interface TransferService {
 
-    Transfer getTransfer(long ref);
+    TransferResponseDto getTransfer(long ref);
 
-    List<Long> emitTransfer(SendDto transfer);
+    List<Long> emitTransfer(SendDto dto);
 
+    String serveTransfer(TransferDto dto);
 
-    void serveTransfer(ServeDto dto);
+    String revertTransfer(TransferDto dto);
 
-    RevertResponseDto revertTransfer(RevertDto dto);
+    CancelResponseDto cancelTransfer(TransferDto dto);
 
-    CancelResponseDto cancelTransfer(CancelDto dto);
+    String blockTransfer(TransferDto dto);
 
-    void blockTransfer(ServeDto dto);
-
-    void unblockTransfer(ServeDto dto);
+    String unblockTransfer(TransferDto dto);
 
     List<TransferResponseDto> getAllTransfers(SearchFilter filter);
+
 }

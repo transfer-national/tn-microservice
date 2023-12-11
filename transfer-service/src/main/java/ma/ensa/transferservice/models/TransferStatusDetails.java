@@ -3,6 +3,7 @@ package ma.ensa.transferservice.models;
 import jakarta.persistence.*;
 import lombok.*;
 import ma.ensa.transferservice.models.enums.TransferStatus;
+import ma.ensa.transferservice.models.users.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;

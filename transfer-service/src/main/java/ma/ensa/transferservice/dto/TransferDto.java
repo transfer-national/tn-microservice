@@ -1,4 +1,4 @@
-package ma.ensa.transferservice.dto.request;
+package ma.ensa.transferservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class TransferDto {
+public class TransferDto {
 
+    // main attributes
     private long ref;
 
     private String reason;
 
     private String userId;
+
+    private ActionType actionType;
+
+
+    // for serving
+    private boolean toWallet;
+
 }

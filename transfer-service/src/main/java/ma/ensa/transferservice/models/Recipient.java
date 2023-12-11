@@ -3,6 +3,7 @@ package ma.ensa.transferservice.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 
 @Data
@@ -16,7 +17,7 @@ public class Recipient {
     @Id
     private long id;
 
-    @ManyToOne
+    @OneToOne
     private Client kycRef;
 
     public Recipient(long id){

@@ -1,14 +1,13 @@
 package ma.ensa.transferservice.mapper;
 
 import lombok.RequiredArgsConstructor;
-import ma.ensa.transferservice.dto.request.SendDto;
+import ma.ensa.transferservice.dto.SendDto;
 import ma.ensa.transferservice.dto.TransferResponseDto;
 import ma.ensa.transferservice.models.Client;
 import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.Transfer;
 import ma.ensa.transferservice.services.impl.RestCall;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Random;
@@ -18,7 +17,6 @@ import java.util.Random;
 public class TransferMapper {
 
     private final RestCall rest;
-
 
     public List<Transfer> toEntity(SendDto dto){
 

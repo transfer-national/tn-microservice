@@ -1,4 +1,4 @@
-package ma.ensa.transferservice.models;
+package ma.ensa.transferservice.models.users;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

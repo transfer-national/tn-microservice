@@ -2,10 +2,6 @@ package ma.ensa.transferservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import ma.ensa.transferservice.dto.request.ServeDto;
-import ma.ensa.transferservice.dto.request.SendDto;
-import ma.ensa.transferservice.models.enums.FeeType;
-import ma.ensa.transferservice.models.enums.TransferType;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +11,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
+import static com.fasterxml.jackson.databind.type.TypeFactory.*;
+import static ma.ensa.transferservice.models.enums.FeeType.*;
+import static ma.ensa.transferservice.models.enums.TransferType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,11 +46,11 @@ public class TransferMockTest {
                 .senderRef(1L)
                 .recipientIds(List.of(1L))
                 .amount(1000)
-                .feeType(FeeType.SENDER)
-                .transferType(TransferType.CASH)
+                .feeType(SENDER)
+                .transferType(CASH)
                 .isNotificationEnabled(true)
                 .reason("gift")
-                .userId("a-123") // agent ID
+                .userId("a-2840863796") // agent ID
                 .build();
 
         var json = objectMapper.writeValueAsString(dto);
@@ -64,8 +63,11 @@ public class TransferMockTest {
                 status().isCreated()
         ).andDo(r -> {
             var result = r.getResponse().getContentAsString();
-            System.out.println("new ref: " + result);
-            this.ref = Long.parseLong(result);
+            List<Long> refs = objectMapper.readValue(
+                    result,
+                    defaultInstance().constructType(List.class)
+            );
+            System.out.println("new ref: " + refs);
         });
 
     }

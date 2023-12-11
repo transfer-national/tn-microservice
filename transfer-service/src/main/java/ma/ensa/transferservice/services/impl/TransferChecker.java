@@ -2,7 +2,7 @@ package ma.ensa.transferservice.services.impl;
 
 
 import ma.ensa.transferservice.models.Transfer;
-import ma.ensa.transferservice.models.User;
+import ma.ensa.transferservice.models.users.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
