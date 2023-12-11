@@ -1,4 +1,4 @@
-package ma.ensa.clientservice.entities;
+package ma.ensa.clientservice.models;
 
 
 import jakarta.persistence.*;
@@ -6,21 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Receipient {
+public class Recipient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String firstName;
+
     private String lastName;
+
     private String phoneNumber;
 
-
-    @OneToOne
+    @OneToOne // ManyToOne
     private Client client;
 }

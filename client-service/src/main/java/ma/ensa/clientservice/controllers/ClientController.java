@@ -1,7 +1,8 @@
 package ma.ensa.clientservice.controllers;
 
-import ma.ensa.clientservice.dto.ClientDTO;
-import ma.ensa.clientservice.entities.Client;
+import lombok.RequiredArgsConstructor;
+import ma.ensa.clientservice.dto.ClientDto;
+import ma.ensa.clientservice.models.Client;
 import ma.ensa.clientservice.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,31 +10,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/clients")
+@RequiredArgsConstructor
 public class ClientController {
-    @Autowired
-    private ClientService clientService;
 
-    @PostMapping(path="/client")
-    public Client ajouterClient(@RequestBody ClientDTO clientDTO) {
+    private final ClientService clientService;
 
-        return clientService.addClient(clientDTO);
-    }
-
-    @GetMapping(path ="/client/{ref}")
-    public Client getClientByRef(@PathVariable Long ref) {
-        return clientService.getClientByRef(ref);
-    }
-
-    @GetMapping(path="/client")
+    @GetMapping
     public List<Client> getAllClients(){
         return clientService.getAllClients();
     }
 
-    @PutMapping(path ="/client/{ref}")
-    public Client updateClientByRef(@PathVariable Long ref ,@RequestBody ClientDTO clientDTO){
-        return clientService.updateClientByRef(ref,clientDTO);
+    @GetMapping(path ="/{ref}")
+    public Client getClient(@PathVariable Long ref) {
+        return clientService.getClientByRef(ref);
     }
-    @DeleteMapping(path ="/client/{ref}")
+
+    @PostMapping
+    public Client addClient(@RequestBody ClientDto dto) {
+        return clientService.addClient(dto);
+    }
+
+    @PutMapping(path ="/{ref}")
+    public Client updateClientByRef(
+            @PathVariable Long ref ,
+            @RequestBody ClientDto dto
+    ){
+        dto.setRef(ref);
+        return clientService.updateClient(dto);
+    }
+    @DeleteMapping(path ="/{ref}")
     public void deleteClientByRef(@PathVariable Long ref){
        clientService.deleteClientByRef(ref);
     }

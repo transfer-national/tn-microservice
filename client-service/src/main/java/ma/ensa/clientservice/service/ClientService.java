@@ -1,16 +1,22 @@
 package ma.ensa.clientservice.service;
 
-import ma.ensa.clientservice.dto.ClientDTO;
-import ma.ensa.clientservice.entities.Client;
+import ma.ensa.clientservice.dto.ClientDto;
+import ma.ensa.clientservice.models.Client;
 
 import java.util.List;
 
 
 public interface ClientService {
-    Client addClient(ClientDTO clientDTO);
+
+    Client addClient(ClientDto clientDTO);
+
     Client getClientByRef(Long ref);
-    List<Client> getAllClients ();
-    Client updateClientByRef(Long ref,ClientDTO clientDTO);
+
+    List<Client> getAllClients();
+
+    Client updateClient(ClientDto dto);
+
+
     void deleteClientByRef(Long ref);
 
 }
