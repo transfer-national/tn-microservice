@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import ma.ensa.clientservice.models.enums.IdType;
 import ma.ensa.clientservice.models.enums.Title;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -28,9 +29,9 @@ public class ClientDto {
 
     private String idNumber;
 
-    private Date idExpiration; // idExpiration
+    private LocalDate idExpiration; // idExpiration
 
-    private Date dob;
+    private LocalDate dob;
 
     private String profession;
 

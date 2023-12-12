@@ -1,6 +1,6 @@
 spring:
     application:
-        name: transfer-service
+        name: client-service
 
 
     datasource:
@@ -24,3 +24,4 @@ eureka:
 server:
     port: 0
 
+years-of-validity: 2

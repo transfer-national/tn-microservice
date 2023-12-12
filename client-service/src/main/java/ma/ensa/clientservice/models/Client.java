@@ -9,7 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.ensa.clientservice.models.enums.IdType;
 import ma.ensa.clientservice.models.enums.Title;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -20,7 +23,7 @@ import java.util.Date;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private long ref;
 
     private Title title; // enum
@@ -35,9 +38,9 @@ public class Client {
 
     private String idNumber;
 
-    private Date idExpiration; // idExpiration
+    private LocalDate idExpiration; // idExpiration
 
-    private Date dob;
+    private LocalDate dob;
 
     private String profession;
 
@@ -52,5 +55,8 @@ public class Client {
     private String gsm;
 
     private String email;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }
