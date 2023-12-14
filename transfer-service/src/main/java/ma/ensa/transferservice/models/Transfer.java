@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+import static jakarta.persistence.FetchType.*;
 import static java.time.LocalDateTime.now;
 
 @Data
@@ -42,7 +43,7 @@ public class Transfer implements Cloneable{
 
     private long groupId;
 
-    @OneToMany(mappedBy = "transfer")
+    @OneToMany(mappedBy = "transfer", fetch = EAGER)
     private List<TransferStatusDetails> statuses;
 
     @PrePersist

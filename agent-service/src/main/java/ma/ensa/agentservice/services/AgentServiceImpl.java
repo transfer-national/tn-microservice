@@ -6,7 +6,9 @@ import ma.ensa.agentservice.dto.BalanceDto;
 import ma.ensa.agentservice.dto.ThresholdDto;
 import ma.ensa.agentservice.models.Agent;
 import ma.ensa.agentservice.models.BackOffice;
+import ma.ensa.agentservice.models.ThresholdUpdate;
 import ma.ensa.agentservice.repositories.AgentRepository;
+import ma.ensa.agentservice.repositories.ThresholdRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import static ma.ensa.agentservice.dto.OperationType.*;
 public class AgentServiceImpl implements AgentService{
 
     private final AgentRepository agentRepository;
+    private final ThresholdRepository thresholdRepository;
 
     private AgentDto toDto(Agent agent){
         var dto = new AgentDto();
@@ -67,7 +70,7 @@ public class AgentServiceImpl implements AgentService{
 
         agent = agentRepository.save(agent);
 
-        return "CREATED SUCCESSFULLY, agentId: " + agent.getUserId();
+        return "CREATED SUCCESSFULLY, agentId: " + agent.getId();
     }
 
     @Override
@@ -115,13 +118,26 @@ public class AgentServiceImpl implements AgentService{
     public String updateThreshold(ThresholdDto dto){
 
         // get the agent entity
-        var agent = getAgentEntity(dto.getUserId());
+        var agent = getAgentEntity(dto.getAgentId());
+
+        var oldThreshold = agent.getThreshold();
+        var newThreshold = dto.getNewThreshold();
 
         // set the new threshold
-        agent.setThreshold(dto.getNewThreshold());
+        agent.setThreshold(newThreshold);
 
         // save the update into the database
         agentRepository.save(agent);
+
+        // save the update record into the database
+        thresholdRepository.save(
+            ThresholdUpdate.builder()
+                .oldValue(oldThreshold)
+                .newValue(newThreshold)
+                .agent(agent)
+                .updatedBy(new BackOffice(dto.getByUser()))
+                .build()
+        );
 
         return "THRESHOLD UPDATED SUCCESSFULLY";
 

@@ -24,4 +24,5 @@ public interface TransferService {
 
     List<TransferResponseDto> getAllTransfers(SearchFilter filter);
 
+    TransferResume getTransferResume(long senderId, int lastDays);
 }

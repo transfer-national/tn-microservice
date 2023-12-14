@@ -20,29 +20,31 @@ spring:
                   uri: lb://transfer-service
                   predicates:
                     - Path=/transfer/**
-                  filters:
-                    - AuthFilter
+
                 # wallet route
                 - id: wallet
                   uri: lb://wallet-service
                   predicates:
                     - Path=/wallet/**
-                  filters:
-                    - PrefixPath=/wallet
-                    - AuthFilter
+
                 # client route
                 - id: client
                   uri: lb://client-service
                   predicates:
                     - Path=/client/**
-                  filters:
-                   - PrefixPath=/client
-                   - AuthFilter
+
                 # discovery route
-                -   id: discovery
-                    uri: http://localhost:8761
-                    predicates:
-                        - Path=/eureka/**
+                - id: discovery
+                  uri: http://localhost:8761
+                  predicates:
+                    - Path=/eureka/**
+
+                # agent service
+                - id: agent
+                  uri: lb://agent-service
+                  predicates:
+                    - Path=/agent/**
+
 
 server.port: 8080
 

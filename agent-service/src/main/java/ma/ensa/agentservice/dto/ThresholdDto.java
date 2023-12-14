@@ -5,7 +5,9 @@ import lombok.Data;
 @Data
 public class ThresholdDto {
 
-    private String userId;
+    private String agentId;
+
+    private String byUser;
 
     private double newThreshold;
 

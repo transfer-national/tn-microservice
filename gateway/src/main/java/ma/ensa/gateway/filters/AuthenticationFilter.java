@@ -1,0 +1,107 @@
+package ma.ensa.gateway.filters;
+
+import lombok.extern.log4j.Log4j2;
+import ma.ensa.gateway.dto.AuthPrincipal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.security.core.context.ReactiveSecurityContextHolder.*;
+
+@Component
+@Log4j2
+public class AuthenticationFilter implements WebFilter {
+
+
+    @Autowired
+    private WebClient.Builder webClientBuilder;
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+
+        // from request get path and the headers
+        var path = exchange.getRequest().getURI().getPath();
+        var headers = exchange.getRequest().getHeaders();
+
+        // get the token
+        if (!headers.containsKey(AUTHORIZATION)) {
+            return chain.filter(exchange);
+        }
+
+        String token = requireNonNull(headers.get(AUTHORIZATION)).get(0);
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        // validate the token and check the authorization
+        // by role
+        return validateToken(token)
+            .flatMap(authPrincipal -> {
+
+                var auth = getAuthToken(authPrincipal);
+
+                var newExchange = addByUserHeader(
+                        exchange,
+                        authPrincipal.getUserId()
+                );
+
+                return chain
+                    .filter(newExchange)
+                    .contextWrite(withAuthentication(auth));
+
+            }).onErrorComplete();
+    }
+
+    private Authentication getAuthToken(AuthPrincipal principal){
+
+
+        var grantedAuthority =
+                new SimpleGrantedAuthority(principal.getRole().name());
+
+        var auth = new PreAuthenticatedAuthenticationToken(
+                principal, null,
+                List.of(grantedAuthority)
+        );
+
+        auth.setAuthenticated(true);
+
+        return auth;
+
+    }
+
+    private ServerWebExchange addByUserHeader(ServerWebExchange exchange, String userId) {
+
+        var newRequest = exchange.getRequest()
+                .mutate()
+                .header("By-User", userId)
+                .build();
+
+        return exchange.mutate().request(newRequest).build();
+
+    }
+
+
+    private Mono<AuthPrincipal> validateToken(String token) {
+
+        var client = webClientBuilder.baseUrl("lb://auth-service").build();
+        return client.get()
+                .uri("/auth/validate?token={t}", token)
+                .retrieve()
+                .bodyToMono(AuthPrincipal.class);
+    }
+}

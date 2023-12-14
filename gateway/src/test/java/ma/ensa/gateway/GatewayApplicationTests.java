@@ -1,7 +1,7 @@
 package ma.ensa.gateway;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ma.ensa.gateway.dto.AuthResponse;
+import ma.ensa.gateway.dto.AuthPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ class GatewayApplicationTests {
                 .bodyValue(json)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(AuthResponse.class)
+                .expectBody(AuthPrincipal.class)
                 .returnResult()
                 .getResponseBody();
 

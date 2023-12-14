@@ -2,6 +2,8 @@ package ma.ensa.transferservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import ma.ensa.transferservice.dto.SendDto;
+import ma.ensa.transferservice.dto.TransferDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +50,7 @@ public class TransferMockTest {
                 .amount(1000)
                 .feeType(SENDER)
                 .transferType(CASH)
-                .isNotificationEnabled(true)
+                .notificationEnabled(true)
                 .reason("gift")
                 .userId("a-2840863796") // agent ID
                 .build();
@@ -76,19 +78,20 @@ public class TransferMockTest {
     @Test @Order(2)
     public void testServeTransfer() throws Exception{
 
-        if(ref == 0L) ref = 1973939389118L;
+        if(ref == 0L) ref = 3500561670874L;
 
-        var dto = ServeDto.builder()
-                .userId("a-123")
+        var dto = TransferDto.builder()
+                .userId("a-2840863796")
                 .toWallet(false)
+                .reason("null")
                 .build();
 
         var json = objectMapper.writeValueAsString(dto);
 
         mockMvc.perform(
-                put("/transfer/{ref}/serve", ref)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
+            put("/transfer/{ref}/revert", ref)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 status().isOk()
         );

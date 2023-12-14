@@ -1,4 +1,4 @@
-package ma.ensa.authservice.models;
+package ma.ensa.authservice.models.user;
 
 
 import jakarta.persistence.*;
@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import ma.ensa.authservice.models.Role;
 import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -50,7 +51,11 @@ public abstract class User implements UserDetails {
     public Role getRole(){
         return Enum.valueOf(
             Role.class,
-            this.getClass().getSimpleName().toUpperCase()
+            this.getClass()
+                .getSimpleName()
+                .replaceAll("([A-Z])", "_$1")
+                .substring(1)
+                .toUpperCase()
         );
     }
 

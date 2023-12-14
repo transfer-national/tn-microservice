@@ -3,7 +3,7 @@ package ma.ensa.authservice.services;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.authservice.dto.AuthRequest;
 import ma.ensa.authservice.dto.AuthResponse;
-import ma.ensa.authservice.models.User;
+import ma.ensa.authservice.models.user.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -49,8 +49,8 @@ public class AuthService {
 
         // return the userId and the role associated with the token
         return AuthResponse.builder()
+                .userId(userId)
                 .role(user.getRole())
-                .token(token)
                 .build();
     }
 }

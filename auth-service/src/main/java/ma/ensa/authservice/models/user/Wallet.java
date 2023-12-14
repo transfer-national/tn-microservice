@@ -1,7 +1,6 @@
-package ma.ensa.authservice.models;
+package ma.ensa.authservice.models.user;
 
 import jakarta.persistence.Entity;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 

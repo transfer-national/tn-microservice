@@ -1,8 +1,7 @@
 package ma.ensa.transferservice.dto;
 
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ma.ensa.transferservice.models.Client;
 import ma.ensa.transferservice.models.Recipient;
@@ -13,6 +12,8 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
 public class SendDto extends TransferDto {
 
@@ -30,6 +31,10 @@ public class SendDto extends TransferDto {
 
     public int getRecipientCount(){
         return recipientIds.size();
+    }
+
+    {
+        setActionType(ActionType.EMIT);
     }
 
 

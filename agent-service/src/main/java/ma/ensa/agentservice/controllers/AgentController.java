@@ -8,8 +8,11 @@ import ma.ensa.agentservice.exceptions.NameNotAvailableException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/agents")
+@RequestMapping("/agent")
 public interface AgentController {
+
+    @GetMapping("/test")
+    String test();
 
     @GetMapping
     List<AgentDto> getAgents();
@@ -28,9 +31,14 @@ public interface AgentController {
     // TODO: create a put mapping to update the agent info
 
     @PutMapping("/balance")
-    String updateBalance(BalanceDto dto);
+    String updateBalance(
+            @RequestBody BalanceDto dto
+    );
 
     @PutMapping("/threshold")
-    String updateThreshold(ThresholdDto dto);
+    String updateThreshold(
+            @RequestBody ThresholdDto dto,
+            @RequestHeader("By-User") String by
+    );
 
 }

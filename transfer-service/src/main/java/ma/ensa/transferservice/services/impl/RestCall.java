@@ -28,9 +28,11 @@ public class RestCall {
         SironResponseDto result = null;
 
         try {
+            // 3 instance siron-service 51456, 52639, 53569
+            // lb ? load balancer -----> 52639 (round-robin algorithm)
             result = restTemplate.getForObject(
-                String.format("lb://siron-service/%s/%d",t2s, ref),
-                SironResponseDto.class
+                "lb://siron-service/{t2s}/{ref}",
+                SironResponseDto.class, t2s, ref
             );
         }catch (Exception ex){
             log.warn("siron service is DOWN !!");

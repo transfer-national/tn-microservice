@@ -4,6 +4,7 @@ package ma.ensa.agentservice.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -38,5 +40,7 @@ public class Agent extends Account {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+
 
 }

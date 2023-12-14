@@ -9,20 +9,18 @@ import ma.ensa.transferservice.mapper.TransferMapper;
 import ma.ensa.transferservice.models.Transfer;
 import ma.ensa.transferservice.models.TransferStatusDetails;
 import ma.ensa.transferservice.models.users.User;
-import ma.ensa.transferservice.models.enums.TransferStatus;
 import ma.ensa.transferservice.repositories.TsdRepository;
 import ma.ensa.transferservice.repositories.TransferRepository;
 import ma.ensa.transferservice.services.TransferService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static java.time.LocalDateTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static ma.ensa.transferservice.dto.ActionType.*;
 import static ma.ensa.transferservice.models.enums.ClientType.*;
 import static ma.ensa.transferservice.models.enums.TransferStatus.*;
 import static ma.ensa.transferservice.models.enums.TransferType.CASH;
@@ -40,8 +38,7 @@ public class TransferServiceImpl implements TransferService {
     private final TransferConfig config;
     private final TransferMapper mapper;
 
-
-    private void saveStatus(Transfer transfer, TransferDto dto){
+    private void saveStatus(Transfer transfer, @NotNull TransferDto dto){
 
         var status = switch(dto.getActionType()) {
             case EMIT -> TO_SERVE;
@@ -109,7 +106,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public String serveTransfer(TransferDto dto) {
+    public String serveTransfer(@NotNull TransferDto dto) {
 
         // find the transfer
         var transfer = getTransferEntity(dto.getRef());
@@ -157,7 +154,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public CancelResponseDto cancelTransfer(TransferDto dto) {
+    public CancelResponseDto cancelTransfer(@NotNull TransferDto dto) {
 
         final int count;
         final int cancelledCount;
@@ -205,7 +202,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public String blockTransfer(TransferDto dto) {
+    public String blockTransfer(@NotNull TransferDto dto) {
 
         // get the transfer entity
         var transfer = getTransferEntity(dto.getRef());
@@ -220,7 +217,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public String unblockTransfer(TransferDto dto) {
+    public String unblockTransfer(@NotNull TransferDto dto) {
 
         // get the transfer entity
         var transfer = getTransferEntity(dto.getRef());
@@ -234,7 +231,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public List<TransferResponseDto> getAllTransfers(SearchFilter f) {
+    public List<TransferResponseDto> getAllTransfers(@NotNull SearchFilter f) {
 
         var formatter = ofPattern("dd-MM-yyyy");
 
@@ -281,4 +278,11 @@ public class TransferServiceImpl implements TransferService {
         return stream.map(mapper::toDto).toList();
 
     }
+
+    @Override
+    public TransferResume getTransferResume(long senderRef, int lastDays) {
+        var last = LocalDateTime.now().minusDays(lastDays);
+        return transferRepository.getTransferResume(senderRef, last);
+    }
+
 }

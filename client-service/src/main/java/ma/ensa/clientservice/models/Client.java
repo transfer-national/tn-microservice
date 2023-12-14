@@ -59,4 +59,6 @@ public class Client {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+
+
 }

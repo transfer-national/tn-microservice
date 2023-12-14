@@ -21,6 +21,12 @@ public interface TransferController {
             @RequestBody SearchFilter filter
     );
 
+    @GetMapping("/resume")
+    TransferResume getTransferResumeBySender(
+            @RequestParam long senderId,
+            @RequestParam int lastDays
+    );
+
     @GetMapping("/{ref}")
     TransferResponseDto getTransfer(
             @PathVariable long ref
@@ -35,7 +41,7 @@ public interface TransferController {
     @PutMapping("/{ref}/{action}")
     Object updateStatus(
         @PathVariable(required = false) Long ref,
-        @PathVariable ActionType action,
+        @PathVariable String action,
         @RequestBody TransferDto dto
     );
 

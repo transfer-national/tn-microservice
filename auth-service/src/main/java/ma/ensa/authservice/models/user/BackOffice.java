@@ -1,4 +1,4 @@
-package ma.ensa.authservice.models;
+package ma.ensa.authservice.models.user;
 
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
