@@ -33,6 +33,12 @@ spring:
                   predicates:
                     - Path=/client/**
 
+                # recipient route
+                -   id: recipient
+                    uri: lb://client-service
+                    predicates:
+                        - Path=/recipient/**
+
                 # discovery route
                 - id: discovery
                   uri: http://localhost:8761

@@ -11,29 +11,29 @@ import java.util.List;
 @RestController
 public interface RecipientController {
 
-    @GetMapping("/clients/{ref}/recipients")
+    @GetMapping("/client/{ref}/recipient")
     List<Recipient> getAllRecipients(
             @PathVariable Long ref
     );
 
-    @PostMapping("/clients/{ref}/recipients")
+    @PostMapping("/client/{ref}/recipient")
     Recipient addRecipient(
             @PathVariable Long ref,
             @RequestBody RecipientDto dto
     );
 
-    @GetMapping(path="/recipients/{id}")
+    @GetMapping(path="/recipient/{id}")
     Recipient getRecipient(
             @PathVariable Long id
     );
 
-    @PutMapping(path="/recipients/{id}")
+    @PutMapping(path="/recipient/{id}")
     Recipient updateRecipientById(
             @PathVariable Long id,
             @RequestBody RecipientDto dto
     );
 
-    @DeleteMapping(path="/recipients/{id}")
+    @DeleteMapping(path="/recipient/{id}")
     void deleteRecipientById(
             @PathVariable Long id
     );

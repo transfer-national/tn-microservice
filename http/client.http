@@ -1,0 +1,44 @@
+### sign in as an agent
+POST localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "userId": "a-6230265944",
+  "password": "mohcine01"
+}
+
+
+### create a client
+POST localhost:8080/client
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "mohcine",
+  "lastName": "sahtani",
+  "email": "mohcine.sahtani@gmail.com",
+  "idExpiration": "2027-11-26",
+  "idType": "CIN",
+  "nationality": "moroccan",
+  "address": "8, BLOC A, BLED EL JED",
+  "gsm": "212704261627",
+  "idNumber": "HH125495",
+  "profession": "software engineer",
+  "title": "M",
+  "dob": "2001-01-19"
+}
+
+### get the client where id = 1
+GET localhost:8080/recipient/1
+
+
+### create 2 recipients
+POST localhost:8080/client/1/recipient
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "z3aytra",
+  "lastName": "sahtani",
+  "phoneNumber": "212704261627"
+}

@@ -36,7 +36,6 @@ public class TransferControllerImpl implements TransferController {
         return service.getAllTransfers(filter);
     }
 
-    @Override
     public TransferResume getTransferResumeBySender(long senderId, int lastDays) {
         return service.getTransferResume(senderId, lastDays);
     }
@@ -45,7 +44,8 @@ public class TransferControllerImpl implements TransferController {
         return service.getTransfer(ref);
     }
 
-    public List<Long> emitTransfer(SendDto dto){
+    public List<Long> emitTransfer(SendDto dto, String byUser){
+        dto.setUserId(byUser);
         return service.emitTransfer(dto);
     }
 

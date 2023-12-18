@@ -32,11 +32,10 @@ public class SecurityConfig {
            .securityContextRepository(getInstance())
            .authenticationManager(authenticationManager)
            .authorizeExchange(ex -> ex
-                   .anyExchange().permitAll()
+               .anyExchange().permitAll()
            )
            .addFilterAt(authFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }
-
 
 }

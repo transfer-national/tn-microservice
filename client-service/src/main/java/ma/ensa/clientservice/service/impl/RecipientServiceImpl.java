@@ -3,10 +3,12 @@ package ma.ensa.clientservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.clientservice.dto.RecipientDto;
 
+import ma.ensa.clientservice.exceptions.ClientNotFound;
 import ma.ensa.clientservice.exceptions.RecipientNotFound;
 import ma.ensa.clientservice.models.Client;
 import ma.ensa.clientservice.models.Recipient;
 
+import ma.ensa.clientservice.repositories.ClientRepository;
 import ma.ensa.clientservice.repositories.RecipientRepository;
 import ma.ensa.clientservice.service.ClientService;
 import ma.ensa.clientservice.service.RecipientService;
@@ -20,15 +22,14 @@ import java.util.List;
 public class RecipientServiceImpl implements RecipientService {
 
     private final RecipientRepository recipientRepository;
-    private final ClientService clientService;
+    private final ClientRepository clientRepository;
 
     @Override
     public Recipient addRecipient(RecipientDto dto) {
 
-        Client client = clientService
-            .getClientByRef(
-                dto.getClientRef()
-            );
+        var client = clientRepository
+                .findById(dto.getClientRef())
+                .orElseThrow(ClientNotFound::new);
 
         var recipient = new Recipient();
         BeanUtils.copyProperties(dto, recipient);

@@ -47,5 +47,7 @@ public class ClientDto {
 
     private String email;
 
+    private String byAgentId; // id of the agent
+
 
 }

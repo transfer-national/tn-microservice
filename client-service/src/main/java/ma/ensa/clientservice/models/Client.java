@@ -1,14 +1,12 @@
 package ma.ensa.clientservice.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.ensa.clientservice.models.enums.IdType;
 import ma.ensa.clientservice.models.enums.Title;
+import ma.ensa.clientservice.models.user.Agent;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
@@ -23,7 +21,8 @@ import java.util.Date;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cli_seq")
+    @SequenceGenerator(name = "cli_seq", allocationSize = 1, initialValue = 2)
     private long ref;
 
     private Title title; // enum
@@ -56,9 +55,10 @@ public class Client {
 
     private String email;
 
+    @ManyToOne
+    private Agent createdBy;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-
 
 }

@@ -12,40 +12,32 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client")
-@RequiredArgsConstructor
-public class ClientController  {
-
-    private final ClientService clientService;
+public interface ClientController {
 
     @GetMapping
-    public List<Client> getAllClients(){
-        return clientService.getAllClients();
-    }
+    List<Client> getAllClients();
 
-    @GetMapping(path ="/{ref}")
-    public Client getClient(@PathVariable Long ref){
-        return clientService.getClientByRef(ref);
-    }
+    @GetMapping(path ="/cin/{idNumber}")
+    ClientDto getClientByIdNumber(@PathVariable String idNumber);
+
+    @GetMapping(path="/{id}")
+    ClientDto getClientByRef(@PathVariable Long id);
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Client addClient(@RequestBody ClientDto dto){
-        return clientService.addClient(dto);
-    }
+    ClientDto addClient(
+            @RequestBody ClientDto dto,
+            @RequestHeader("By-User") String byAgent
+    );
 
     @PutMapping(path ="/{ref}")
-    public Client updateClientByRef(
+    Client updateClientByRef(
             @PathVariable Long ref ,
             @RequestBody ClientDto dto
-    ){
-        dto.setRef(ref);
-        return clientService.updateClient(dto);
-    }
+    );
 
     @DeleteMapping(path ="/{ref}")
-    public void deleteClientByRef(@PathVariable Long ref){
-        clientService.deleteClientByRef(ref);
-    }
-
+    void deleteClientByRef(@PathVariable Long ref);
 
 }

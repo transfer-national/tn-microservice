@@ -41,14 +41,13 @@ public class TransferServiceImpl implements TransferService {
     private void saveStatus(Transfer transfer, @NotNull TransferDto dto){
 
         var status = switch(dto.getActionType()) {
-            case EMIT -> TO_SERVE;
-            case SERVE -> SERVED;
-            case REVERT -> REVERTED;
-            case CANCEL -> CANCELLED;
-            case BLOCK -> BLOCKED;
+            case EMIT    -> TO_SERVE;
+            case SERVE   -> SERVED;
+            case REVERT  -> REVERTED;
+            case CANCEL  -> CANCELLED;
+            case BLOCK   -> BLOCKED;
             case UNBLOCK -> UNBLOCKED_TO_SERVE;
         };
-
 
         var statusDetails = TransferStatusDetails.builder()
                 .byUser(new User(dto.getUserId()))
@@ -84,9 +83,16 @@ public class TransferServiceImpl implements TransferService {
         rest.callSiron(dto.getSenderRef(), SENDER);
 
         // debit the amount from wallet or from agent account
-        int rCount = dto.getRecipientCount();
-        double amount = dto.getAmount() * rCount;
-        double fees = config.getFeeForSender(dto.getFeeType()) * rCount;
+
+        double amount = transfers
+                .stream()
+                .mapToDouble(Transfer::getAmount)
+                .sum();
+
+        double fees = transfers.stream()
+                .map(Transfer::getFeeType)
+                .mapToDouble(config::getFeeForSender)
+                .sum();
 
         if (dto.getTransferType() == CASH) {
             rest.updateAgentBalance(dto.getUserId(), -amount);

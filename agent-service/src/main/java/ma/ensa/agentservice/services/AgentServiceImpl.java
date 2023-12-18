@@ -10,6 +10,7 @@ import ma.ensa.agentservice.models.ThresholdUpdate;
 import ma.ensa.agentservice.repositories.AgentRepository;
 import ma.ensa.agentservice.repositories.ThresholdRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class AgentServiceImpl implements AgentService{
 
     private final AgentRepository agentRepository;
     private final ThresholdRepository thresholdRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private AgentDto toDto(Agent agent){
         var dto = new AgentDto();
@@ -66,6 +68,11 @@ public class AgentServiceImpl implements AgentService{
         // set backoffice
         agent.setCreatedBy(
             new BackOffice(dto.getCreatedBy())
+        );
+
+        // set the encoded password
+        agent.setPassword(
+            passwordEncoder.encode("mohcine01")
         );
 
         agent = agentRepository.save(agent);

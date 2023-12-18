@@ -35,7 +35,8 @@ public interface TransferController {
     @PostMapping
     @ResponseStatus(CREATED)
     List<Long> emitTransfer(
-            @RequestBody SendDto dto
+            @RequestBody SendDto dto,
+            @RequestHeader("By-User") String byUser
     );
 
     @PutMapping("/{ref}/{action}")

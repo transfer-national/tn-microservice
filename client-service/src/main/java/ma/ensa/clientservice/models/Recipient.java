@@ -6,13 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
 public class Recipient {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rec_seq")
+    @SequenceGenerator(name = "rec_seq", allocationSize = 1)
     private long id;
 
     private String firstName;
@@ -21,6 +25,6 @@ public class Recipient {
 
     private String phoneNumber;
 
-    @OneToOne // ManyToOne
+    @ManyToOne
     private Client client;
 }

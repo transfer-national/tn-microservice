@@ -1,5 +1,7 @@
 package ma.ensa.transferservice.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import ma.ensa.transferservice.models.enums.TransferStatus;
@@ -20,6 +22,7 @@ public class TransferStatusDetails {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     private Transfer transfer;
 

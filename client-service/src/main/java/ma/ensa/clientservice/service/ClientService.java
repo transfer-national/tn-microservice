@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface ClientService {
 
-    Client addClient(ClientDto clientDTO);
+    ClientDto addClient(ClientDto dto);
 
-    Client getClientByRef(Long ref);
+    ClientDto getClientByIdNumber(String idNumber);
 
     List<Client> getAllClients();
 
     Client updateClient(ClientDto dto);
 
-
     void deleteClientByRef(Long ref);
 
+    ClientDto getClientByRef(Long id);
 }

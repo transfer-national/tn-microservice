@@ -23,26 +23,24 @@ public class TransferMapper {
         var sender = new Client(dto.getSenderRef());
 
         // generate long id
-        long groupId = (dto.getRecipientCount() != 1) ?
+        long groupId = (dto.getTxCount() != 1) ?
                 generateLong() : 0L;
 
-        var baseTransfer = Transfer.builder()
-            .sender(sender)
-            .amount(dto.getAmount())
-            .feeType(dto.getFeeType())
-            .transferType(dto.getTransferType())
-            .notificationEnabled(dto.isNotificationEnabled())
-            .groupId(groupId)
-            .build();
+        var unitTransferBuilder = Transfer.builder()
+                .sender(sender)
+                .transferType(dto.getTransferType())
+                .groupId(groupId);
 
-        return dto.getRecipientIds()
+        return dto.getUnitTransfers()
             .stream()
-            .map(Recipient::new)
-            .map(recipient -> {
-                var transfer = baseTransfer.clone();
-                transfer.setRecipient(recipient);
-                return transfer;
-            }).toList();
+            .map(ut -> unitTransferBuilder
+                .recipient(new Recipient(ut.getRecipientId()))
+                .amount(ut.getAmount())
+                .notificationEnabled(ut.isNotificationEnabled())
+                .feeType(ut.getFeeType())
+                .build()
+            )
+            .toList();
     }
 
 
@@ -53,9 +51,6 @@ public class TransferMapper {
             .statuses(t.getStatuses())
             .sender(
                 rest.getSender(t.getSender())
-            )
-            .sender(
-                rest.getRecipient(t.getRecipient())
             )
             .build();
     }

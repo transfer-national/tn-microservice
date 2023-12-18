@@ -21,7 +21,7 @@ import static java.time.LocalDateTime.now;
 @Builder
 
 @Entity
-public class Transfer implements Cloneable{
+public class Transfer{
 
 
     @Id
@@ -66,8 +66,8 @@ public class Transfer implements Cloneable{
     public TransferStatusDetails getStatusDetails(){
         // find the last status
         return statuses.stream()
-                .reduce((f,s) -> s)
-                .orElseThrow(); // unexpected exception
+            .reduce((f,s) -> s)
+            .orElseThrow(); // unexpected exception
     }
 
     public LocalDateTime getSentAt(){
@@ -79,13 +79,4 @@ public class Transfer implements Cloneable{
         return groupId != 0L;
     }
 
-    @Override
-    public Transfer clone() {
-        try {
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return (Transfer) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

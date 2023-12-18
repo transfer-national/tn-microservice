@@ -23,4 +23,6 @@ public class AgentDto {
 
     private Double threshold;
 
+    private String password;
+
 }

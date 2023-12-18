@@ -19,24 +19,27 @@ public class SendDto extends TransferDto {
 
     private long senderRef;
 
-    private List<Long> recipientIds;
-
-    private double amount;
-
     private TransferType transferType;
 
-    private FeeType feeType;
+    private List<UnitTransfer> unitTransfers;
 
-    private boolean notificationEnabled;
-
-    public int getRecipientCount(){
-        return recipientIds.size();
+    public int getTxCount(){
+        return unitTransfers.size();
     }
 
     {
         setActionType(ActionType.EMIT);
     }
 
+    @Data
+    public static class UnitTransfer{
+        private Long recipientId;
 
+        private double amount;
+
+        private FeeType feeType;
+
+        private boolean notificationEnabled;
+    }
 
 }
