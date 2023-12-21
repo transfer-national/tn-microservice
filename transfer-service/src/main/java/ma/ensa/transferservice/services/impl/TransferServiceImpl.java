@@ -1,144 +1,294 @@
 package ma.ensa.transferservice.services.impl;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import ma.ensa.transferservice.dto.TransferDto;
+import lombok.extern.log4j.Log4j2;
+import ma.ensa.transferservice.config.TransferConfig;
+import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.exceptions.TransferNotFound;
 import ma.ensa.transferservice.mapper.TransferMapper;
 import ma.ensa.transferservice.models.Transfer;
-import ma.ensa.transferservice.models.TransferStatusHistory;
-import ma.ensa.transferservice.models.User;
-import ma.ensa.transferservice.models.enums.TransferStatus;
-import ma.ensa.transferservice.models.enums.TransferType;
-import ma.ensa.transferservice.repositories.TSHRepository;
+import ma.ensa.transferservice.models.TransferStatusDetails;
+import ma.ensa.transferservice.models.users.User;
+import ma.ensa.transferservice.repositories.TsdRepository;
 import ma.ensa.transferservice.repositories.TransferRepository;
 import ma.ensa.transferservice.services.TransferService;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
+import static java.time.LocalDateTime.parse;
+import static java.time.format.DateTimeFormatter.ofPattern;
+import static ma.ensa.transferservice.models.enums.ClientType.*;
 import static ma.ensa.transferservice.models.enums.TransferStatus.*;
+import static ma.ensa.transferservice.models.enums.TransferType.CASH;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class TransferServiceImpl implements TransferService {
 
     private final TransferRepository transferRepository;
-    private final TSHRepository tshRepository;
-    private final LoadBalancerClient loadBalancerClient;
+    private final TsdRepository tsdRepository;
 
-    private RestTemplate restTemplate;
+    private final RestCall rest;
+    private final TransferChecker checker;
+    private final TransferConfig config;
+    private final TransferMapper mapper;
 
-    @PostConstruct
-    public void init(){
-        restTemplate = new RestTemplate();
-    }
+    private void saveStatus(Transfer transfer, @NotNull TransferDto dto){
 
-    private String getServiceUrl(String serviceId){
-        return loadBalancerClient
-                .choose(serviceId+"-service")
-                .getUri()
-                .toString();
-    }
+        var status = switch(dto.getActionType()) {
+            case EMIT    -> TO_SERVE;
+            case SERVE   -> SERVED;
+            case REVERT  -> REVERTED;
+            case CANCEL  -> CANCELLED;
+            case BLOCK   -> BLOCKED;
+            case UNBLOCK -> UNBLOCKED_TO_SERVE;
+        };
 
-    private void callSironForSender(long ref){
-        final String path = String.format(
-                "%s/sender/%d",
-                getServiceUrl("siron"), ref
-        );
-
-        Boolean bl = restTemplate.getForObject(
-                path, Boolean.class
-        );
-
-        if(bl != null && !bl){
-            throw new RuntimeException("the sender is black listed");
-        }
-    }
-
-    @Override
-    public long emitTransfer(TransferDto dto) {
-
-        // call siron
-        callSironForSender(dto.getSenderRef());
-
-        // if the transferType is DEBIT OR WALLET
-        if(dto.getTransferType() != TransferType.CASH ){
-            // TODO: debit from the account(REST CALL)
-            // and have to be completed successfully
-            // otherwise complete
-        }
-
-        // dto ---> transfer
-        Transfer transfer = TransferMapper.map(dto);
-
-        // persist the instance into the database
-        transfer = transferRepository.save(transfer);
-
-        // create transfer status
-        var tsh = TransferStatusHistory.builder()
-                .byUser(new User(dto.getSentById()))
+        var statusDetails = TransferStatusDetails.builder()
+                .byUser(new User(dto.getUserId()))
                 .reason(dto.getReason())
                 .transfer(transfer)
-                .status(TO_SERVE)
+                .status(status)
                 .build();
 
-        // save the status into the database
-        tshRepository.save(tsh);
-
-        // return the ref
-        return transfer.getRef();
+        tsdRepository.save(statusDetails);
 
     }
 
-    @Override
-    public TransferStatus getTransferStatus(long ref) {
-        return tshRepository
-                .findTransferStatusByRef(ref);
+    private Transfer getTransferEntity(long ref){
+        return transferRepository
+            .findById(ref)
+            .orElseThrow(TransferNotFound::new);
     }
 
     @Override
-    public void serveTransfer(long ref) {
+    public TransferResponseDto getTransfer(long ref){
+        return mapper.toDto(
+            getTransferEntity(ref)
+        );
+    }
 
-        // find the transfer
-        Transfer transfer = transferRepository
-                .findById(ref)
-                .orElseThrow(
-                        // TODO: create a custom exception : TransferNotFound
-                        () -> new RuntimeException("transfer does not exists")
-                );
+    @Override
+    public List<Long> emitTransfer(SendDto dto) {
 
-        // get the transfer status
-        TransferStatus status = getTransferStatus(ref);
+        // from dto to transfer entity
+        var transfers = mapper.toEntity(dto);
 
-        if(status != TO_SERVE && status != UNBLOCKED_TO_SERVE){
-            // TODO: create a custom exception : TransferCannotBeServed
-            throw new RuntimeException("it's not able to serve");
+        // call siron to check the transfer
+        rest.callSiron(dto.getSenderRef(), SENDER);
+
+        // debit the amount from wallet or from agent account
+
+        double amount = transfers
+                .stream()
+                .mapToDouble(Transfer::getAmount)
+                .sum();
+
+        double fees = transfers.stream()
+                .map(Transfer::getFeeType)
+                .mapToDouble(config::getFeeForSender)
+                .sum();
+
+        if (dto.getTransferType() == CASH) {
+            rest.updateAgentBalance(dto.getUserId(), -amount);
+        } else {
+            // TODO: change this line of code later
+            amount += fees;
+            rest.updateWalletBalance(dto.getSenderRef(), -amount);
         }
 
+        // return the refs
+        return transferRepository
+            .saveAll(transfers)
+            .stream()
+            .peek(t -> saveStatus(t, dto))
+            .map(Transfer::getRef)
+            .toList();
+    }
+
+    @Override
+    public String serveTransfer(@NotNull TransferDto dto) {
+
+        // find the transfer
+        var transfer = getTransferEntity(dto.getRef());
+
+        // call SIRON for Recipient
+        rest.callSiron(dto.getRef(), RECIPIENT);
+
+        // check serve
+        checker.checkServe(transfer);
+
         // get the amount
-        double amountToServe = transfer.getAmountForTheRecipient();
+        double fee = config.getFeeForRecipient(transfer.getFeeType());
+        double amountToServe = transfer.getAmount() - fee;
+
+        // call agent service to debit from its account
+        rest.updateAgentBalance(dto.getUserId(), -amountToServe);
+
+        // mode of payment --> CASH or WALLET
+        if(dto.isToWallet()){
+            // call wallet service to update the balance
+            var recipientId = transfer.getRecipient().getKycRef().getRef();
+            rest.updateWalletBalance(recipientId, amountToServe);
+        }
+
+        // save the transfer status into the database
+        saveStatus(transfer, dto);
+
+        return "SERVED SUCCESSFULLY";
 
     }
 
     @Override
-    public void revertTransfer(long ref) {
+    public String revertTransfer(@NotNull TransferDto dto) {
+
+        var transfer = getTransferEntity(dto.getRef());
+
+        // check revert
+        checker.checkRevert(transfer, dto.getUserId());
+
+        // save the new status into the database
+        saveStatus(transfer, dto);
+
+        return "REVERTED SUCCESSFULLY";
 
     }
 
     @Override
-    public void cancelTransfer(long ref) {
+    public CancelResponseDto cancelTransfer(@NotNull TransferDto dto) {
+
+        final int count;
+        final int cancelledCount;
+        final List<Long> cancelledTransfers;
+
+        // get the transfer
+        var transfer = getTransferEntity(dto.getRef());
+
+        // check revert
+        checker.checkRevert(transfer, dto.getUserId());
+
+        if(transfer.isMultiple()){
+
+            var transfers = transferRepository.getAllByGroupId(transfer.getGroupId());
+
+            cancelledTransfers = transfers
+                    .stream()
+                    .filter(t-> {
+                        var status = t.getStatusDetails().getStatus();
+                        return status == TO_SERVE || status == UNBLOCKED_TO_SERVE;
+                    }).peek(t-> saveStatus(t, dto))
+                    .map(Transfer::getRef)
+                    .toList();
+
+            count = transfers.size();
+            cancelledCount = cancelledTransfers.size();
+        }else{
+            count = 1;
+            var status = transfer.getStatusDetails().getStatus();
+            if(status == TO_SERVE || status == UNBLOCKED_TO_SERVE){
+                saveStatus(transfer, dto);
+                cancelledTransfers = List.of(transfer.getRef());
+                cancelledCount = 1;
+            }else{
+                cancelledTransfers = Collections.emptyList();
+                cancelledCount = 0;
+            }
+        }
+
+        return CancelResponseDto.builder()
+                .count(count)
+                .cancelledCount(cancelledCount)
+                .refs(cancelledTransfers)
+                .build();
+    }
+
+    @Override
+    public String blockTransfer(@NotNull TransferDto dto) {
+
+        // get the transfer entity
+        var transfer = getTransferEntity(dto.getRef());
+
+        // TODO: check the condition
+
+        // save the new status into the database
+        saveStatus(transfer, dto);
+
+        return "BLOCKED SUCCESSFULLY";
 
     }
 
     @Override
-    public void blockTransfer(long ref) {
+    public String unblockTransfer(@NotNull TransferDto dto) {
+
+        // get the transfer entity
+        var transfer = getTransferEntity(dto.getRef());
+
+        // TODO: check the condition
+
+        // save the new status into the database
+        saveStatus(transfer, dto);
+
+        return "UNBLOCKED SUCCESSFULLY";
+    }
+
+    @Override
+    public List<TransferResponseDto> getAllTransfers(@NotNull SearchFilter f) {
+
+        var formatter = ofPattern("dd-MM-yyyy");
+
+        var stream = transferRepository.findAll().stream();
+
+        // filter by idNumber
+        if(f.getIdentity() != null){
+            stream = stream.filter(t ->
+                t.getSender().getIdentity().equals(f.getIdentity())
+            );
+        }
+
+        // filter by gsm
+        if(f.getGsm() != null){
+            stream = stream.filter(t ->
+                t.getSender().getGsm().equals(f.getGsm())
+            );
+        }
+
+        // filter by status
+        if(f.getStatus() != null){
+            stream = stream.filter(t ->
+                t.getStatusDetails().getStatus() == f.getStatus()
+            );
+        }
+
+        // filter by fromDate
+        if(f.getFromDate() != null){
+            var from = parse(f.getFromDate(), formatter);
+            stream = stream.filter(t ->
+                t.getSentAt().isAfter(from)
+            );
+        }
+
+        // filter by toDate
+        if(f.getToDate() != null){
+            var to = parse(f.getToDate(), formatter);
+            stream = stream.filter(t ->
+                t.getSentAt().isBefore(to)
+            );
+        }
+
+        // map from transfer to transferDto
+        return stream.map(mapper::toDto).toList();
 
     }
 
     @Override
-    public void unblockTransfer() {
-
+    public TransferResume getTransferResume(long senderRef, int lastDays) {
+        var last = LocalDateTime.now().minusDays(lastDays);
+        return transferRepository.getTransferResume(senderRef, last);
     }
+
 }

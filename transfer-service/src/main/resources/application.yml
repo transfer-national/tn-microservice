@@ -27,4 +27,4 @@ server:
 transfer:
     daysOfValidity: 7
     daysOfClaiming: 14
-    transferFee: 20
+    fee: 20

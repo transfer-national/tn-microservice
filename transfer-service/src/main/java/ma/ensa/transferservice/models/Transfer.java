@@ -2,22 +2,18 @@ package ma.ensa.transferservice.models;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ma.ensa.transferservice.config.TransferConfig;
 import ma.ensa.transferservice.models.enums.FeeType;
-import ma.ensa.transferservice.models.enums.TransferStatus;
 import ma.ensa.transferservice.models.enums.TransferType;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
-import static java.time.LocalDateTime.*;
+import static jakarta.persistence.FetchType.*;
+import static java.time.LocalDateTime.now;
 
 @Data
 @NoArgsConstructor
@@ -25,11 +21,8 @@ import static java.time.LocalDateTime.*;
 @Builder
 
 @Entity
-public class Transfer {
+public class Transfer{
 
-    @Value("transfer")
-    @Transient
-    private TransferConfig transferConfig;
 
     @Id
     private long ref;
@@ -48,13 +41,15 @@ public class Transfer {
 
     private boolean notificationEnabled;
 
-    @OneToMany(mappedBy = "transfer")
-    private List<TransferStatusHistory> statusHistories;
+    private long groupId;
+
+    @OneToMany(mappedBy = "transfer", fetch = EAGER)
+    private List<TransferStatusDetails> statuses;
 
     @PrePersist
     public void init(){
 
-        Random random = new Random();
+        var random = new Random();
 
         this.ref = random.nextLong(
             1_000_000_000_000L,
@@ -62,40 +57,26 @@ public class Transfer {
         );
     }
 
-    public double getFeeForTheSender(){
-        double fee = transferConfig.getTransferFee();
-        return switch (feeType){
-            case SENDER -> fee;
-            case FIFTY_FIFTY -> fee/2;
-            default -> 0;
-        };
+    public TransferStatusDetails getSendingDetails(){
+        return statuses.stream()
+                .findFirst()
+                .orElseThrow();
     }
 
-    public double getAmountForTheRecipient(){
-        double fee = transferConfig.getTransferFee();
-        return amount - (fee - getFeeForTheSender());
+    public TransferStatusDetails getStatusDetails(){
+        // find the last status
+        return statuses.stream()
+            .reduce((f,s) -> s)
+            .orElseThrow(); // unexpected exception
     }
 
     public LocalDateTime getSentAt(){
-
-        return statusHistories
-                .stream()
-                .filter(s -> s.getStatus() == TransferStatus.TO_SERVE)
-                .findFirst()
-                .orElseThrow(RuntimeException::new)
-                .getUpdatedAt();
+        return getSendingDetails()
+            .getUpdatedAt();
     }
 
-    public boolean isValid(){
-        return getSentAt()
-                .plusDays(transferConfig.getDaysOfValidity())
-                .isAfter(now());
-    }
-
-    public boolean isClaimable(){
-        return getSentAt()
-                .plusDays(transferConfig.getDaysOfClaiming())
-                .isAfter(now());
+    public boolean isMultiple(){
+        return groupId != 0L;
     }
 
 }

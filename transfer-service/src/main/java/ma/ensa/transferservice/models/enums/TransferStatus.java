@@ -5,8 +5,8 @@ public enum TransferStatus {
     TO_SERVE,
     SERVED,
     REVERTED,
-    CANCELLED,
     BLOCKED,
+    CANCELLED,
     UNBLOCKED_TO_SERVE,
     UNCLAIMED,
 

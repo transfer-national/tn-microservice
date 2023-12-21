@@ -1,26 +1,28 @@
 package ma.ensa.transferservice.services;
 
 
-import ma.ensa.transferservice.dto.TransferDto;
-import ma.ensa.transferservice.models.Transfer;
-import ma.ensa.transferservice.models.enums.TransferStatus;
-import org.springframework.stereotype.Service;
+import ma.ensa.transferservice.dto.*;
 
-@Service
+import java.util.List;
+
+
 public interface TransferService {
 
-    long emitTransfer(TransferDto transfer);
+    TransferResponseDto getTransfer(long ref);
 
-    TransferStatus getTransferStatus(long ref);
+    List<Long> emitTransfer(SendDto dto);
 
-    void serveTransfer(long ref);
+    String serveTransfer(TransferDto dto);
 
-    void revertTransfer(long ref);
+    String revertTransfer(TransferDto dto);
 
-    void cancelTransfer(long ref);
+    CancelResponseDto cancelTransfer(TransferDto dto);
 
-    void blockTransfer(long ref);
+    String blockTransfer(TransferDto dto);
 
-    void unblockTransfer();
+    String unblockTransfer(TransferDto dto);
 
+    List<TransferResponseDto> getAllTransfers(SearchFilter filter);
+
+    TransferResume getTransferResume(long senderId, int lastDays);
 }

@@ -23,5 +23,8 @@ public class Transfer {
     @ManyToOne
     private Client sender;
 
+    @ManyToOne
+    private Recipient recipient;
+
 
 }

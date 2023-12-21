@@ -1,34 +1,65 @@
 package ma.ensa.transferservice.mapper;
 
-import ma.ensa.transferservice.dto.TransferDto;
+import lombok.RequiredArgsConstructor;
+import ma.ensa.transferservice.dto.SendDto;
+import ma.ensa.transferservice.dto.TransferResponseDto;
 import ma.ensa.transferservice.models.Client;
 import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.Transfer;
-import org.springframework.beans.BeanUtils;
+import ma.ensa.transferservice.services.impl.RestCall;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Random;
+
+@Component
+@RequiredArgsConstructor
 public class TransferMapper {
 
-    public static Transfer map(TransferDto dto){
+    private final RestCall rest;
 
-        // create a transfer instance
-        Transfer transfer = new Transfer(){{
+    public List<Transfer> toEntity(SendDto dto){
 
-            setRecipient(
-                    new Recipient(dto.getRecipientId())
-            );
+        var sender = new Client(dto.getSenderRef());
 
-            setSender(
-                    new Client(dto.getSenderRef())
-            );
+        // generate long id
+        long groupId = (dto.getTxCount() != 1) ?
+                generateLong() : 0L;
 
-        }};
+        var unitTransferBuilder = Transfer.builder()
+                .sender(sender)
+                .transferType(dto.getTransferType())
+                .groupId(groupId);
 
-        // copy the properties from dto to record
-        BeanUtils.copyProperties(dto, transfer);
-
-        return transfer;
-
+        return dto.getUnitTransfers()
+            .stream()
+            .map(ut -> unitTransferBuilder
+                .recipient(new Recipient(ut.getRecipientId()))
+                .amount(ut.getAmount())
+                .notificationEnabled(ut.isNotificationEnabled())
+                .feeType(ut.getFeeType())
+                .build()
+            )
+            .toList();
     }
 
 
+    public TransferResponseDto toDto(Transfer t) {
+        return TransferResponseDto.builder()
+            .ref(t.getRef())
+            .amount(t.getAmount())
+            .statuses(t.getStatuses())
+            .sender(
+                rest.getSender(t.getSender())
+            )
+            .build();
+    }
+
+    private long generateLong(){
+        var random = new Random();
+        return random.nextLong(
+            1_000_000L,
+            1_000_000_000L
+        );
+    }
 }

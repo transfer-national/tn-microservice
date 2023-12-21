@@ -1,33 +1,27 @@
 package ma.ensa.transferservice.dto;
 
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.ensa.transferservice.models.enums.FeeType;
-import ma.ensa.transferservice.models.enums.TransferType;
-
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class TransferDto {
 
-    private Long senderRef;
-
-    private Long recipientId;
-
-    private String sentById;
-
-    private double amount;
-
-    private TransferType transferType;
-
-    private FeeType feeType;
+    // main attributes
+    private long ref;
 
     private String reason;
 
-    private boolean isNotificationEnabled;
+    private String userId;
+
+    private ActionType actionType;
+
+
+    // for serving
+    private boolean toWallet;
+
 }

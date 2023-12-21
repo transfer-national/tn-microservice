@@ -2,12 +2,13 @@ package ma.ensa.transferservice.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import lombok.*;
 
+@Data
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
@@ -16,6 +17,11 @@ public class Recipient {
     @Id
     private long id;
 
+    @OneToOne
+    private Client kycRef;
 
+    public Recipient(long id){
+        this.id = id;
+    }
 
 }

@@ -1,0 +1,42 @@
+### login as backoffice
+POST localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "userId": "b-3184597406",
+  "password": "mohcine01"
+}
+
+### add an agent
+POST localhost:8080/agent
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "mohcine-s",
+  "email": "mohcine@sahtanii.ma",
+  "phoneNumber": "212704261628",
+  "balance": 1000000000,
+  "threshold": 80000
+}
+
+### debit from the account
+PUT localhost:8080/agent/balance
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "agentId": "a-7202159078",
+  "amount": 160000,
+  "type": "DEBIT"
+}
+
+### update the threshold of an agent
+PUT localhost:8080/agent/threshold
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "agentId": "a-7202159078",
+  "newThreshold": 60000
+}
