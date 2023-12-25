@@ -1,0 +1,13 @@
+spring:
+    mail:
+        host: smtp.gmail.com
+        username: mohcine.sahtani@gmail.com
+        password: ....
+        port: 587
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enabled: true
+                    debug: true
