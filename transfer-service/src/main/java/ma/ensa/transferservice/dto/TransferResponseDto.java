@@ -21,7 +21,7 @@ public class TransferResponseDto {
 
     private ClientDto sender;
 
-    private ClientDto recipient;
+    private RecipientDto recipient;
 
     private List<TransferStatusDetails> statuses;
 }

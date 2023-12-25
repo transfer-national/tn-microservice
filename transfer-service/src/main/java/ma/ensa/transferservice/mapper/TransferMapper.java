@@ -52,6 +52,9 @@ public class TransferMapper {
             .sender(
                 rest.getSender(t.getSender())
             )
+            .recipient(
+                rest.getRecipient(t.getRecipient())
+            )
             .build();
     }
 

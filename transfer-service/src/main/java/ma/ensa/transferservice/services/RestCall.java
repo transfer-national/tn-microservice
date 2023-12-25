@@ -3,6 +3,7 @@ package ma.ensa.transferservice.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ma.ensa.transferservice.dto.ClientDto;
+import ma.ensa.transferservice.dto.RecipientDto;
 import ma.ensa.transferservice.dto.SironResponseDto;
 import ma.ensa.transferservice.exceptions.BlackListedException;
 import ma.ensa.transferservice.models.Client;
@@ -70,16 +71,12 @@ public class RestCall {
         );
     }
 
-    public ClientDto getRecipient(Recipient recipient) {
+    public RecipientDto getRecipient(Recipient recipient) {
 
-        return Optional.of(recipient.getKycRef())
-            .map(this::getSender)
-            .orElse(
-                restTemplate.getForObject(
-                    "lb://client-service/recipient/{id}",
-                    ClientDto.class, recipient.getId()
-                )
-            );
+        return restTemplate.getForObject(
+                "lb://client-service/recipient/{id}",
+                RecipientDto.class, recipient.getId()
+        );
 
     }
 }

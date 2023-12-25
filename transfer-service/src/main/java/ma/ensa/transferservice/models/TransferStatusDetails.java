@@ -1,5 +1,7 @@
 package ma.ensa.transferservice.models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -20,6 +22,7 @@ public class TransferStatusDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private long id;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -27,7 +30,8 @@ public class TransferStatusDetails {
     private Transfer transfer;
 
     @ManyToOne
-    private User byUser; // AGENT, WALLET, GAP, OR BACK OFFICE
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private User byUser;
 
     private TransferStatus status;
 
@@ -35,5 +39,10 @@ public class TransferStatusDetails {
 
     @CreationTimestamp
     private LocalDateTime updatedAt;
+
+    @JsonGetter
+    public String getByUserId(){
+        return byUser.getId();
+    }
 
 }

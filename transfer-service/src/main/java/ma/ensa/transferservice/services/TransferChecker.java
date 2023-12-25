@@ -1,6 +1,7 @@
 package ma.ensa.transferservice.services;
 
 
+import lombok.RequiredArgsConstructor;
 import ma.ensa.transferservice.models.Transfer;
 import ma.ensa.transferservice.models.users.User;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import static ma.ensa.transferservice.models.enums.TransferStatus.*;
 
 @Component
+@RequiredArgsConstructor
 public class TransferChecker {
 
     public void checkServe(Transfer transfer){

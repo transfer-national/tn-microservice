@@ -18,7 +18,8 @@ import static java.time.LocalDateTime.now;
 
 @Data
 @NoArgsConstructor
-@SuperBuilder
+@AllArgsConstructor
+@Builder
 
 @Entity
 public class Transfer{
