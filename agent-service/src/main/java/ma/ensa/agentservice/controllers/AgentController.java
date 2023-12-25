@@ -11,15 +11,14 @@ import java.util.List;
 @RequestMapping("/agent")
 public interface AgentController {
 
-    @GetMapping("/test")
-    String test();
 
     @GetMapping
     List<AgentDto> getAgents();
 
-    @GetMapping("/{userId}")
+    // user = id || user == name
+    @GetMapping("/{user}")
     AgentDto getAgent(
-        @PathVariable String userId
+        @PathVariable String user // name or id
     );
 
     @PostMapping

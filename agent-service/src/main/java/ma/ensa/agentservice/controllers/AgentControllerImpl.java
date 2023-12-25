@@ -16,11 +16,6 @@ public class AgentControllerImpl implements AgentController{
     private final AgentService service;
 
     @Override
-    public String test() {
-        return "hello agent";
-    }
-
-    @Override
     public List<AgentDto> getAgents() {
         return service.getAgents();
     }
@@ -43,7 +38,6 @@ public class AgentControllerImpl implements AgentController{
 
     @Override
     public String updateThreshold(ThresholdDto dto, String byUser) {
-        System.out.println(dto);
         dto.setByUser(byUser);
         return service.updateThreshold(dto);
     }

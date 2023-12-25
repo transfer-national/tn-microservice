@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
 public interface AgentService {
 
 
     List<AgentDto> getAgents();
 
 
-    AgentDto getAgent(String userId);
+    AgentDto getAgent(String user);
 
 
     String createAgent(AgentDto dto);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ma.ensa.agentservice.dto.AgentDto;
 import ma.ensa.agentservice.dto.BalanceDto;
 import ma.ensa.agentservice.dto.ThresholdDto;
+import ma.ensa.agentservice.exceptions.AgentNotFoundException;
 import ma.ensa.agentservice.models.Agent;
 import ma.ensa.agentservice.models.BackOffice;
 import ma.ensa.agentservice.models.ThresholdUpdate;
@@ -31,12 +32,12 @@ public class AgentServiceImpl implements AgentService{
         return dto;
     }
 
-    private Agent getAgentEntity(String id){
+    private Agent getAgentEntity(String user){
 
         return  agentRepository
-            .findById(id)
-            .orElseThrow();
-            // TODO: create `AgentNotFoundException` class
+            .findById(user)
+            .or(() -> agentRepository.findByName(user))
+            .orElseThrow(AgentNotFoundException::new);
     }
 
     @Override
@@ -50,10 +51,10 @@ public class AgentServiceImpl implements AgentService{
     }
 
     @Override
-    public AgentDto getAgent(String userId) {
+    public AgentDto getAgent(String user) {
 
         return toDto(
-            getAgentEntity(userId)
+            getAgentEntity(user)
         );
     }
 
