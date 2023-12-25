@@ -18,6 +18,6 @@ import lombok.NoArgsConstructor;
 public class Client {
 
     @Id
-    private Long id;
+    private Long ref;
 
 }

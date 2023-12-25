@@ -2,7 +2,6 @@ spring:
     application:
         name: wallet-service
 
-
     datasource:
         url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:tn}
         username: root

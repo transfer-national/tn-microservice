@@ -1,7 +1,7 @@
 package ma.ensa.walletservice.repositories;
 
 import jakarta.transaction.Transactional;
-import ma.ensa.walletservice.models.Wallet;
+import ma.ensa.walletservice.models.user.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,10 +12,6 @@ import java.util.Optional;
 @Transactional
 public interface WalletRepository
         extends JpaRepository<Wallet, String> {
-
-    @Query("SELECT w.balance FROM Wallet w WHERE w.id = :id")
-    Optional<Double> findBalanceById(@Param("id") String id);
-
 
     @Modifying
     @Query("UPDATE Wallet w SET w.balance = w.balance + :amount " +

@@ -1,6 +1,5 @@
-package ma.ensa.walletservice.models;
+package ma.ensa.walletservice.models.user;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -9,12 +8,11 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @SuperBuilder
 
 @Entity
 public class Account extends User {
 
-    private Double balance;
+    private double balance;
 
 }
