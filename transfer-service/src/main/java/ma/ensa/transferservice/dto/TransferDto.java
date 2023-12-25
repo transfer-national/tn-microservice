@@ -20,7 +20,6 @@ public class TransferDto {
 
     private ActionType actionType;
 
-
     // for serving
     private boolean toWallet;
 

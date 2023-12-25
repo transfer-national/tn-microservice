@@ -1,4 +1,4 @@
-package ma.ensa.transferservice.services.impl;
+package ma.ensa.transferservice.services;
 
 
 import ma.ensa.transferservice.models.Transfer;

@@ -6,7 +6,7 @@ import ma.ensa.transferservice.dto.TransferResponseDto;
 import ma.ensa.transferservice.models.Client;
 import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.Transfer;
-import ma.ensa.transferservice.services.impl.RestCall;
+import ma.ensa.transferservice.services.RestCall;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

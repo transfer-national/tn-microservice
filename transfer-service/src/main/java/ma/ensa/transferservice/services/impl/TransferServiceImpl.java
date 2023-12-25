@@ -11,6 +11,8 @@ import ma.ensa.transferservice.models.TransferStatusDetails;
 import ma.ensa.transferservice.models.users.User;
 import ma.ensa.transferservice.repositories.TsdRepository;
 import ma.ensa.transferservice.repositories.TransferRepository;
+import ma.ensa.transferservice.services.RestCall;
+import ma.ensa.transferservice.services.TransferChecker;
 import ma.ensa.transferservice.services.TransferService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

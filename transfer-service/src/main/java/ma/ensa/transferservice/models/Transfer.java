@@ -3,6 +3,7 @@ package ma.ensa.transferservice.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import ma.ensa.transferservice.config.TransferConfig;
 import ma.ensa.transferservice.models.enums.FeeType;
 import ma.ensa.transferservice.models.enums.TransferType;
@@ -17,8 +18,7 @@ import static java.time.LocalDateTime.now;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 
 @Entity
 public class Transfer{

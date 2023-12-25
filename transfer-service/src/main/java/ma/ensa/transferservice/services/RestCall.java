@@ -1,4 +1,4 @@
-package ma.ensa.transferservice.services.impl;
+package ma.ensa.transferservice.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
