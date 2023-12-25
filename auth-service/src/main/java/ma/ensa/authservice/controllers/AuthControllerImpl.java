@@ -9,26 +9,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthControllerImpl {
+public class AuthControllerImpl implements AuthController{
 
     private final AuthService service;
 
-
-    @GetMapping("/test")
-    public String testGateway(){
-        return "hello world";
-    }
-
-    @PostMapping("/login")
-    public AuthResponse login(
-            @RequestBody AuthRequest dto
-    ){
+    @Override
+    public AuthResponse login(AuthRequest dto){
         return service.login(dto);
     }
 
-    @GetMapping("/validate")
-    public AuthResponse validateToken(@RequestParam String token){
+    @Override
+    public AuthResponse validateToken(String token){
         return service.checkToken(token);
+    }
+
+    @Override
+    public String setPassword(AuthRequest dto) {
+        return service.setPassword(dto);
     }
 
 }

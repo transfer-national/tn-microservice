@@ -1,5 +1,6 @@
 package ma.ensa.authservice.dto;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
