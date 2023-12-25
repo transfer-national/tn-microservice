@@ -95,13 +95,13 @@ public class AgentServiceImpl implements AgentService{
 
             // check the threshold
             if(agent.getThreshold() < amount){
-                throw new RuntimeException();
+                throw new RuntimeException("threshold overflow");
                 // TODO: create `ThresholdOverflowException` class
             }
 
             // check the balance
             if(balance < amount){
-                throw new RuntimeException();
+                throw new RuntimeException("insufficient balance ");
                 // TODO: create `InsufficientBalanceException` class
             }
 

@@ -1,8 +1,8 @@
 package ma.ensa.clientservice.exceptions;
 
-public class ClientNotFound extends RuntimeException{
+public class ClientNotFoundException extends RuntimeException{
 
-    public ClientNotFound(){
+    public ClientNotFoundException(){
         super("client not found");
     }
 

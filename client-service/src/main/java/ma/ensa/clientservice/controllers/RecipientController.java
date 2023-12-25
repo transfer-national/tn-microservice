@@ -1,9 +1,6 @@
 package ma.ensa.clientservice.controllers;
 
-import lombok.RequiredArgsConstructor;
 import ma.ensa.clientservice.dto.RecipientDto;
-import ma.ensa.clientservice.models.Recipient;
-import ma.ensa.clientservice.service.RecipientService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,23 +9,23 @@ import java.util.List;
 public interface RecipientController {
 
     @GetMapping("/client/{ref}/recipient")
-    List<Recipient> getAllRecipients(
+    List<RecipientDto> getAllRecipients(
             @PathVariable Long ref
     );
 
     @PostMapping("/client/{ref}/recipient")
-    Recipient addRecipient(
+    String addRecipient(
             @PathVariable Long ref,
             @RequestBody RecipientDto dto
     );
 
     @GetMapping(path="/recipient/{id}")
-    Recipient getRecipient(
+    RecipientDto getRecipient(
             @PathVariable Long id
     );
 
     @PutMapping(path="/recipient/{id}")
-    Recipient updateRecipientById(
+    String updateRecipientById(
             @PathVariable Long id,
             @RequestBody RecipientDto dto
     );

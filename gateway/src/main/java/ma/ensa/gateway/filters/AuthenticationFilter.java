@@ -3,7 +3,6 @@ package ma.ensa.gateway.filters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ma.ensa.gateway.dto.AuthPrincipal;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -29,7 +28,7 @@ public class AuthenticationFilter implements WebFilter {
     private final WebClient.Builder webClientBuilder;
 
     @Override
-    public @NotNull Mono<Void> filter(@NotNull ServerWebExchange exchange, @NotNull WebFilterChain chain) {
+    public Mono<Void> filter (ServerWebExchange exchange, WebFilterChain chain) {
 
         // from request get the headers
         var headers = exchange.getRequest().getHeaders();
@@ -60,7 +59,7 @@ public class AuthenticationFilter implements WebFilter {
             }).onErrorComplete();
     }
 
-    private @NotNull Authentication getAuthToken(@NotNull AuthPrincipal principal){
+    private Authentication getAuthToken (AuthPrincipal principal){
 
 
         var grantedAuthority =
@@ -77,8 +76,8 @@ public class AuthenticationFilter implements WebFilter {
 
     }
 
-    private @NotNull ServerWebExchange addByUserHeader(
-            @NotNull ServerWebExchange exchange, String userId
+    private ServerWebExchange addByUserHeader(
+            ServerWebExchange exchange, String userId
     ) {
 
         var newRequest = exchange.getRequest()
@@ -91,7 +90,7 @@ public class AuthenticationFilter implements WebFilter {
     }
 
 
-    private @NotNull Mono<AuthPrincipal> validateToken(String token) {
+    private Mono<AuthPrincipal> validateToken(String token) {
 
         var client = webClientBuilder.baseUrl("lb://auth-service").build();
         return client.get()

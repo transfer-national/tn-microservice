@@ -3,8 +3,8 @@ POST localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "userId": "b-3184597406",
-  "password": "mohcine01"
+  "userId": "b-4738243305",
+  "password": "mohcine19"
 }
 
 ### add an agent
@@ -14,7 +14,7 @@ Authorization: Bearer {{token}}
 
 {
   "name": "mohcine-s",
-  "email": "mohcine@sahtanii.ma",
+  "email": "mohcine@sahtani.ma",
   "phoneNumber": "212704261628",
   "balance": 1000000000,
   "threshold": 80000
@@ -26,7 +26,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "agentId": "a-7202159078",
+  "agentId": "a-1576702643",
   "amount": 160000,
   "type": "DEBIT"
 }

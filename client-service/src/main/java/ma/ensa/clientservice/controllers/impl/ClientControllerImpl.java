@@ -6,7 +6,6 @@ import ma.ensa.clientservice.controllers.ClientController;
 import ma.ensa.clientservice.dto.ClientDto;
 import ma.ensa.clientservice.models.Client;
 import ma.ensa.clientservice.service.ClientService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,12 +32,12 @@ public class ClientControllerImpl implements ClientController {
     }
 
 
-    public ClientDto addClient(@NotNull ClientDto dto, String byAgentId){
+    public ClientDto addClient(ClientDto dto, String byAgentId){
         dto.setByAgentId(byAgentId);
         return service.addClient(dto);
     }
 
-    public Client updateClientByRef(Long ref, @NotNull ClientDto dto){
+    public Client updateClientByRef(Long ref, ClientDto dto){
         dto.setRef(ref);
         return service.updateClient(dto);
     }

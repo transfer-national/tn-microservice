@@ -3,7 +3,7 @@ POST localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "userId": "a-6230265944",
+  "userId": "a-5410598334",
   "password": "mohcine01"
 }
 
@@ -29,16 +29,16 @@ Authorization: Bearer {{token}}
 }
 
 ### get the client where id = 1
-GET localhost:8080/recipient/1
+GET localhost:8080/recipient/2
 
 
 ### create 2 recipients
-POST localhost:8080/client/1/recipient
+POST localhost:8080/client/2/recipient
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "firstName": "z3aytra",
+  "firstName": "mohcine",
   "lastName": "sahtani",
   "phoneNumber": "212704261627"
 }

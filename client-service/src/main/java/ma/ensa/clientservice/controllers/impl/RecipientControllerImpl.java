@@ -3,7 +3,6 @@ package ma.ensa.clientservice.controllers.impl;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.clientservice.controllers.RecipientController;
 import ma.ensa.clientservice.dto.RecipientDto;
-import ma.ensa.clientservice.models.Recipient;
 import ma.ensa.clientservice.service.RecipientService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,20 +14,20 @@ public class RecipientControllerImpl implements RecipientController {
 
     private final RecipientService service;
 
-    public List<Recipient> getAllRecipients(Long ref){
+    public List<RecipientDto> getAllRecipients(Long ref){
         return service.getAllRecipients(ref);
     }
 
-    public Recipient addRecipient(Long ref, RecipientDto dto){
+    public String addRecipient(Long ref, RecipientDto dto){
         dto.setClientRef(ref);
         return service.addRecipient(dto);
     }
 
-    public Recipient getRecipient(Long id){
+    public RecipientDto getRecipient(Long id){
         return service.getRecipient(id);
     }
 
-    public Recipient updateRecipientById(Long id, RecipientDto dto){
+    public String updateRecipientById(Long id, RecipientDto dto){
         dto.setId(id);
         return service.updateRecipient(dto);
     }

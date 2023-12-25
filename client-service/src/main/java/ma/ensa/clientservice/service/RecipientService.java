@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface RecipientService {
 
-    Recipient addRecipient(RecipientDto dto);
+    String addRecipient(RecipientDto dto);
 
-    Recipient getRecipient(Long id);
+    RecipientDto getRecipient(Long id);
 
-    List<Recipient> getAllRecipients(Long clientRef);
+    List<RecipientDto> getAllRecipients(Long clientRef);
 
-    Recipient updateRecipient(RecipientDto dto);
+    String updateRecipient(RecipientDto dto);
 
     void deleteRecipient(Long id);
 }

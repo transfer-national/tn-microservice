@@ -2,13 +2,11 @@ package ma.ensa.clientservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import ma.ensa.clientservice.dto.ClientDto;
-import ma.ensa.clientservice.exceptions.ClientNotFound;
+import ma.ensa.clientservice.exceptions.ClientNotFoundException;
 import ma.ensa.clientservice.models.Client;
 import ma.ensa.clientservice.models.user.Agent;
 import ma.ensa.clientservice.repositories.ClientRepository;
 import ma.ensa.clientservice.service.ClientService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +62,7 @@ public class ClientServiceImpl implements ClientService {
     public ClientDto getClientByRef(Long id) {
         var client = clientRepository
                 .findById(id)
-                .orElseThrow(ClientNotFound::new);
+                .orElseThrow(ClientNotFoundException::new);
 
         return new ClientDto(){{
             copyProperties(client, this);
@@ -75,7 +73,7 @@ public class ClientServiceImpl implements ClientService {
 
         var client = clientRepository
                 .findByIdNumber(idNumber)
-                .orElseThrow(ClientNotFound::new);
+                .orElseThrow(ClientNotFoundException::new);
 
         return new ClientDto(){{
             copyProperties(client, this);

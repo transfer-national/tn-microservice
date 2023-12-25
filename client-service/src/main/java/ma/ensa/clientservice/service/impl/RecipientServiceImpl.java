@@ -3,14 +3,12 @@ package ma.ensa.clientservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.clientservice.dto.RecipientDto;
 
-import ma.ensa.clientservice.exceptions.ClientNotFound;
+import ma.ensa.clientservice.exceptions.ClientNotFoundException;
 import ma.ensa.clientservice.exceptions.RecipientNotFound;
-import ma.ensa.clientservice.models.Client;
 import ma.ensa.clientservice.models.Recipient;
 
 import ma.ensa.clientservice.repositories.ClientRepository;
 import ma.ensa.clientservice.repositories.RecipientRepository;
-import ma.ensa.clientservice.service.ClientService;
 import ma.ensa.clientservice.service.RecipientService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -24,44 +22,68 @@ public class RecipientServiceImpl implements RecipientService {
     private final RecipientRepository recipientRepository;
     private final ClientRepository clientRepository;
 
+
+    public RecipientDto toDto(Recipient recipient){
+
+        return RecipientDto.builder()
+                .firstName(recipient.getFirstName())
+                .lastName(recipient.getLastName())
+                .phoneNumber(recipient.getPhoneNumber())
+                .build();
+    }
+
+
     @Override
-    public Recipient addRecipient(RecipientDto dto) {
+    public String addRecipient(RecipientDto dto) {
 
         var client = clientRepository
                 .findById(dto.getClientRef())
-                .orElseThrow(ClientNotFound::new);
+                .orElseThrow(ClientNotFoundException::new);
 
+        // create the recipient instance
         var recipient = new Recipient();
         BeanUtils.copyProperties(dto, recipient);
         recipient.setClient(client);
 
-        return  recipientRepository.save(recipient);
+        // save the new recipient into the database
+        recipientRepository.save(recipient);
+
+        return  "RECIPIENT ADDED SUCCESSFULLY";
     }
 
     @Override
-    public Recipient getRecipient(Long id){
+    public RecipientDto getRecipient(Long id){
         return recipientRepository
                 .findById(id)
+                .map(this::toDto)
                 .orElseThrow(RecipientNotFound::new);
 
     }
     @Override
-    public List<Recipient> getAllRecipients(Long ref){
+    public List<RecipientDto> getAllRecipients(Long ref){
         // get all the recipients by clientRef
-        return recipientRepository.findAllByClient_Ref(ref);
+        return recipientRepository
+                .findAllByClient_Ref(ref)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Override
-    public Recipient updateRecipient(RecipientDto dto){
+    public String updateRecipient(RecipientDto dto){
 
         // get the recipient
-        var recipient = getRecipient(dto.getId());
+        var recipient = recipientRepository
+                .findById(dto.getId())
+                .orElseThrow();
 
         // copy the properties
         BeanUtils.copyProperties(dto, recipient);
 
         // save the update
-        return recipientRepository.save(recipient);
+        recipientRepository.save(recipient);
+
+        return "UPDATED SUCCESSFULLY";
 
     }
     @Override
