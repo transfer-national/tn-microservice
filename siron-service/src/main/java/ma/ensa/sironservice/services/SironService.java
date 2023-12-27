@@ -1,7 +1,6 @@
 package ma.ensa.sironservice.services;
 
 import ma.ensa.sironservice.models.BlackListedClient;
-import org.springframework.lang.Nullable;
 
 public interface SironService {
 
@@ -12,7 +11,6 @@ public interface SironService {
      * or {@code null} otherwise
      * @see BlackListedClient
      */
-    @Nullable
     BlackListedClient isSenderBlackListed(long ref);
 
     /**
@@ -23,10 +21,8 @@ public interface SironService {
      * @see BlackListedClient
      */
 
-    @Nullable
     BlackListedClient isSenderBlackListedByTransfer(long txRef);
 
 
-    @Nullable
     BlackListedClient isRecipientBlackListed(long ref);
 }
