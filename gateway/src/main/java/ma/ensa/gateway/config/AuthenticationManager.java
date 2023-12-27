@@ -7,12 +7,10 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-@Slf4j
 public class AuthenticationManager implements ReactiveAuthenticationManager {
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
-        System.out.println("hh");
         return Mono.just(authentication);
     }
 }

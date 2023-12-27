@@ -54,7 +54,7 @@ public class AuthenticationFilter implements WebFilter {
 
                 return chain
                     .filter(newExchange)
-                    .contextWrite(withAuthentication(auth));
+                    .contextWrite(withAuthentication(auth)); // 1j
 
             }).onErrorComplete();
     }
