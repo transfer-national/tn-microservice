@@ -1,10 +1,7 @@
-package ma.ensa.transferservice.dto;
+package ma.ensa.transferservice.dto.tx;
 
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import ma.ensa.transferservice.models.Client;
-import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.enums.FeeType;
 import ma.ensa.transferservice.models.enums.TransferType;
 

@@ -1,4 +1,4 @@
-package ma.ensa.transferservice.dto;
+package ma.ensa.transferservice.dto.tx;
 
 public enum ActionType {
 

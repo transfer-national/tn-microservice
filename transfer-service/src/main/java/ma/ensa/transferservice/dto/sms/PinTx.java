@@ -1,4 +1,4 @@
-package ma.ensa.transferservice.dto;
+package ma.ensa.transferservice.dto.sms;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

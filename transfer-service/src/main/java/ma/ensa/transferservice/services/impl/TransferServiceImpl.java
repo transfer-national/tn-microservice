@@ -4,6 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ma.ensa.transferservice.config.TransferConfig;
 import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.dto.sms.PinTx;
+import ma.ensa.transferservice.dto.tx.SendDto;
+import ma.ensa.transferservice.dto.tx.TransferDto;
+import ma.ensa.transferservice.dto.tx.TransferResponseDto;
 import ma.ensa.transferservice.exceptions.TransferNotFound;
 import ma.ensa.transferservice.mapper.TransferMapper;
 import ma.ensa.transferservice.models.Transfer;
@@ -40,7 +44,7 @@ public class TransferServiceImpl implements TransferService {
     private final TransferConfig config;
     private final TransferMapper mapper;
 
-    private void saveStatus(Transfer transfer, @NotNull TransferDto dto){
+    private void saveStatus(Transfer tx, TransferDto dto){
 
         var status = switch(dto.getActionType()) {
             case EMIT    -> TO_SERVE;
@@ -54,12 +58,13 @@ public class TransferServiceImpl implements TransferService {
         var statusDetails = TransferStatusDetails.builder()
                 .byUser(new User(dto.getUserId()))
                 .reason(dto.getReason())
-                .transfer(transfer)
+                .transfer(tx)
                 .status(status)
                 .build();
 
-        tsdRepository.save(statusDetails);
+        rest.sendStatusViaSMS(tx, status);
 
+        tsdRepository.save(statusDetails);
     }
 
     private Transfer getTransferEntity(long ref){
@@ -76,7 +81,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public List<Long> emitTransfer(SendDto dto) {
+    public List<PinTx> emitTransfer(SendDto dto) {
 
         // from dto to transfer entity
         var transfers = mapper.toEntity(dto);
@@ -86,31 +91,45 @@ public class TransferServiceImpl implements TransferService {
 
         // debit the amount from wallet or from agent account
 
-        double amount = transfers
-                .stream()
+            // get the total amount to transfer
+        double amount = transfers.stream()
                 .mapToDouble(Transfer::getAmount)
                 .sum();
 
+            // get the base fees;
         double fees = transfers.stream()
                 .map(Transfer::getFeeType)
                 .mapToDouble(config::getFeeForSender)
                 .sum();
 
+            // get the notif fees
+        double notifFees = transfers.stream()
+                .filter(Transfer::isNotificationEnabled)
+                .mapToDouble((t) -> 1)
+                .sum();
+
         if (dto.getTransferType() == CASH) {
             rest.updateAgentBalance(dto.getUserId(), -amount);
         } else {
-            // TODO: change this line of code later
-            amount += fees;
+            amount += fees + notifFees;
             rest.updateWalletBalance(dto.getSenderRef(), -amount);
         }
 
         // return the refs
-        return transferRepository
-            .saveAll(transfers)
-            .stream()
-            .peek(t -> saveStatus(t, dto))
-            .map(Transfer::getRef)
-            .toList();
+        var ptx = transferRepository
+            .saveAll(transfers).stream()
+            .peek(tx -> saveStatus(tx, dto))
+            .map(tx -> PinTx.builder()
+                .phoneNumber(
+                    tx.isNotificationEnabled() ?
+                    tx.getRecipient().getPhoneNumber()
+                    : null
+                )
+                .txRef(tx.getRef())
+                .build()
+            ).toList();
+
+        return rest.generatePinCode(ptx);
     }
 
     @Override

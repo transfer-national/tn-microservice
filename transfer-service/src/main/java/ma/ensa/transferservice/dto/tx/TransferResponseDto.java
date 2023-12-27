@@ -1,10 +1,12 @@
-package ma.ensa.transferservice.dto;
+package ma.ensa.transferservice.dto.tx;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ma.ensa.transferservice.dto.ClientDto;
+import ma.ensa.transferservice.dto.RecipientDto;
 import ma.ensa.transferservice.models.TransferStatusDetails;
 
 import java.util.List;

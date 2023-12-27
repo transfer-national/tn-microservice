@@ -25,8 +25,8 @@ public class TransferStatusDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private long id;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Transfer transfer;
 
     @ManyToOne

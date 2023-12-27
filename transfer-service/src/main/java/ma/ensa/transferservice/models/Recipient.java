@@ -17,6 +17,8 @@ public class Recipient {
     @Id
     private long id;
 
+    private String phoneNumber;
+
     @OneToOne
     private Client kycRef;
 

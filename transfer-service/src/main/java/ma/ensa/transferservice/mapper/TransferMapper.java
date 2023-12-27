@@ -1,8 +1,8 @@
 package ma.ensa.transferservice.mapper;
 
 import lombok.RequiredArgsConstructor;
-import ma.ensa.transferservice.dto.SendDto;
-import ma.ensa.transferservice.dto.TransferResponseDto;
+import ma.ensa.transferservice.dto.tx.SendDto;
+import ma.ensa.transferservice.dto.tx.TransferResponseDto;
 import ma.ensa.transferservice.models.Client;
 import ma.ensa.transferservice.models.Recipient;
 import ma.ensa.transferservice.models.Transfer;

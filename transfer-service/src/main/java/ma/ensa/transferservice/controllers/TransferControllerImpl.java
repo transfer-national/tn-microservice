@@ -2,6 +2,10 @@ package ma.ensa.transferservice.controllers;
 
 
 import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.dto.tx.ActionType;
+import ma.ensa.transferservice.dto.tx.SendDto;
+import ma.ensa.transferservice.dto.tx.TransferDto;
+import ma.ensa.transferservice.dto.tx.TransferResponseDto;
 import ma.ensa.transferservice.services.TransferService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static ma.ensa.transferservice.dto.ActionType.*;
+import static ma.ensa.transferservice.dto.tx.ActionType.*;
 
 @RestController
 public class TransferControllerImpl implements TransferController {

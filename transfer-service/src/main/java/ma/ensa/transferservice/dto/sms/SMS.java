@@ -1,4 +1,4 @@
-package ma.ensa.smsservice.dto;
+package ma.ensa.transferservice.dto.sms;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

@@ -2,8 +2,8 @@ package ma.ensa.transferservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import ma.ensa.transferservice.dto.SendDto;
-import ma.ensa.transferservice.dto.TransferDto;
+import ma.ensa.transferservice.dto.tx.SendDto;
+import ma.ensa.transferservice.dto.tx.TransferDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +14,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static com.fasterxml.jackson.databind.type.TypeFactory.*;
-import static ma.ensa.transferservice.models.enums.FeeType.*;
-import static ma.ensa.transferservice.models.enums.TransferType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,11 +44,6 @@ public class TransferMockTest {
 
         var dto = SendDto.builder()
                 .senderRef(1L)
-                .recipientIds(List.of(1L))
-                .amount(1000)
-                .feeType(SENDER)
-                .transferType(CASH)
-                .notificationEnabled(true)
                 .reason("gift")
                 .userId("a-2840863796") // agent ID
                 .build();

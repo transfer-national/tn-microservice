@@ -2,6 +2,9 @@ package ma.ensa.transferservice.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.dto.tx.SendDto;
+import ma.ensa.transferservice.dto.tx.TransferDto;
+import ma.ensa.transferservice.dto.tx.TransferResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
