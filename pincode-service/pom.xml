@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ma.ensa</groupId>
-    <artifactId>notification-service</artifactId>
+    <artifactId>pincode-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>notification-service</name>
     <description>notification-service</description>
@@ -33,6 +33,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
         <dependency>
