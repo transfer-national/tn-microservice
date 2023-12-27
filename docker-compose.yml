@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+            - "5672:5672"  # RabbitMQ default port
+            - "15672:15672"  # RabbitMQ management plugin port (UI)
+        environment:
+            RABBITMQ_DEFAULT_USER: guest  # Replace with your desired username
+            RABBITMQ_DEFAULT_PASS: guest  # Replace with your desired password
