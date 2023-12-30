@@ -96,6 +96,10 @@ public class AuthenticationFilter implements WebFilter {
         return client.get()
                 .uri("/auth/validate?token={t}", token)
                 .retrieve()
+                .onStatus((h) -> h.is4xxClientError(), (r) -> {
+                    log.warn("9waaadt brojolla");
+                    return Mono.just(new RuntimeException("3aaaa"));
+                })
                 .bodyToMono(AuthPrincipal.class);
     }
 }

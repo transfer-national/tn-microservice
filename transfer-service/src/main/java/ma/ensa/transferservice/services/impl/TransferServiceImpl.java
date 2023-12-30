@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 import static java.time.LocalDateTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -100,10 +103,7 @@ public class TransferServiceImpl implements TransferService {
         double fees = transfers.stream()
                 .map(Transfer::getFeeType)
                 .mapToDouble(config::getFeeForSender)
-                .sum();
-
-            // get the notif fees
-        double notifFees = transfers.stream()
+                .sum() + transfers.stream()
                 .filter(Transfer::isNotificationEnabled)
                 .mapToDouble((t) -> 1)
                 .sum();
@@ -111,7 +111,7 @@ public class TransferServiceImpl implements TransferService {
         if (dto.getTransferType() == CASH) {
             rest.updateAgentBalance(dto.getUserId(), -amount);
         } else {
-            amount += fees + notifFees;
+            amount += fees;
             rest.updateWalletBalance(dto.getSenderRef(), -amount);
         }
 
@@ -128,6 +128,8 @@ public class TransferServiceImpl implements TransferService {
                 .txRef(tx.getRef())
                 .build()
             ).toList();
+
+
 
         return rest.generatePinCode(ptx);
     }

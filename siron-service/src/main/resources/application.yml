@@ -2,11 +2,10 @@ spring:
     application:
         name: siron-service
 
-
     datasource:
         url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:tn}
-        username: root
-        password: 12345678
+        username: ${DB_USER:root}
+        password: ${DB_PASS:12345678}
         driver-class-name: com.mysql.cj.jdbc.Driver
 
     jpa:
@@ -16,15 +15,14 @@ spring:
         database-platform: org.hibernate.dialect.MySQLDialect
         open-in-view: false
 
+    batch:
+        job:
+            enabled: false
+
 eureka:
     client:
         service-url:
-            defaultZone: http://${EUREKA_URL:localhost:8761}/eureka/
+            defaultZone: ${EUREKA_URL:localhost:8761}/eureka/
 
 server:
     port: 0
-
-transfer:
-    daysOfValidity: 7
-    daysOfClaiming: 14
-    transferFee: 20

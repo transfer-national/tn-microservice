@@ -1,8 +1,8 @@
 package ma.ensa.sironservice.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,13 +18,15 @@ import java.time.LocalDateTime;
 @Builder
 
 @Entity
-public class TransferStatusHistory {
+public class TransferStatusDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
     @ManyToOne
     private Transfer transfer;
+
 
     private TransferStatus status;
 
@@ -32,5 +34,4 @@ public class TransferStatusHistory {
 
     @CreationTimestamp
     private LocalDateTime updatedAt;
-
 }

@@ -11,6 +11,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity.*;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.web.server.context.NoOpServerSecurityContextRepository.*;
 
 @Configuration
@@ -25,7 +26,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) throws Exception {
+    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http){
        http
            .csrf(CsrfSpec::disable)
            .httpBasic(HttpBasicSpec::disable)

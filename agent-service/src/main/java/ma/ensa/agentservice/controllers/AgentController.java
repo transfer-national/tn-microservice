@@ -6,19 +6,16 @@ import ma.ensa.agentservice.dto.ThresholdDto;
 import org.springframework.web.bind.annotation.*;
 import ma.ensa.agentservice.exceptions.NameNotAvailableException;
 import java.util.List;
+import java.util.Objects;
 
-@RestController
-@RequestMapping("/agent")
+
 public interface AgentController {
 
 
-    @GetMapping
-    List<AgentDto> getAgents();
-
     // user = id || user == name
-    @GetMapping("/{user}")
-    AgentDto getAgent(
-        @PathVariable String user // name or id
+    @GetMapping
+    Object getAgent(
+        @RequestParam(value = "user", required = false) String user // name or id
     );
 
     @PostMapping

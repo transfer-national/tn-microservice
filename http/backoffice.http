@@ -3,7 +3,7 @@ POST localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "userId": "b-4738243305",
+  "userId": "b-1161843363",
   "password": "mohcine19"
 }
 
@@ -13,12 +13,16 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "mohcine-s",
+  "name": "mohcine sahtani",
   "email": "mohcine@sahtani.ma",
   "phoneNumber": "212704261628",
   "balance": 1000000000,
   "threshold": 80000
 }
+
+
+### get the agent
+GET localhost:8080/agent?user=a-5775857406
 
 ### debit from the account
 PUT localhost:8080/agent/balance

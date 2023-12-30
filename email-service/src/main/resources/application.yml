@@ -1,13 +1,14 @@
 spring:
-    mail:
-        host: smtp.gmail.com
-        username: mohcine.sahtani@gmail.com
-        password: ....
-        port: 587
-        properties:
-            mail:
-                smtp:
-                    auth: true
-                    starttls:
-                        enabled: true
-                    debug: true
+
+    main:
+        allow-bean-definition-overriding: true
+    application:
+       name: email-service
+
+    rabbitmq:
+        host: ${RABBIT_HOST:localhost}
+        port: ${RABBIT_PORT:5672}
+        username: ${RABBIT_USER:guest}
+        password: ${RABBIT_PASS:guest}
+server:
+    port: 0

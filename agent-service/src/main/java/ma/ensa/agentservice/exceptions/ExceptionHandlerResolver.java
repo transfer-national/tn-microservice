@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlerResolver {
 
+
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(RuntimeException.class)
     public String handleOtherException(Exception ex){

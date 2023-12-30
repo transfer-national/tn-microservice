@@ -6,10 +6,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-public class NotificationServiceApplication {
+public class PinCodeServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NotificationServiceApplication.class, args);
+
+        SpringApplication.run(PinCodeServiceApplication.class, args);
     }
 
 }

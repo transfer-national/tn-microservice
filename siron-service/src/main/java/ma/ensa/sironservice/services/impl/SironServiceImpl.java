@@ -1,20 +1,16 @@
 package ma.ensa.sironservice.services.impl;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import ma.ensa.sironservice.models.*;
 import ma.ensa.sironservice.models.enums.BlockReason;
 import ma.ensa.sironservice.repositories.BlcRepository;
 import ma.ensa.sironservice.repositories.ClientRepository;
 import ma.ensa.sironservice.repositories.TransferRepository;
-import ma.ensa.sironservice.repositories.TshRepository;
+import ma.ensa.sironservice.repositories.TsdRepository;
 import ma.ensa.sironservice.services.SironService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static ma.ensa.sironservice.models.enums.BlockReason.*;
 import static ma.ensa.sironservice.models.enums.TransferStatus.*;
@@ -25,7 +21,7 @@ public class SironServiceImpl implements SironService {
 
     private final TransferRepository transferRepository;
     private final ClientRepository clientRepository;
-    private final TshRepository tshRepository;
+    private final TsdRepository tshRepository;
     private final BlcRepository blcRepository;
 
     private Transfer tx;
@@ -36,7 +32,7 @@ public class SironServiceImpl implements SironService {
 
     private void blockTransfer(BlockReason br){
 
-        var tsh = TransferStatusHistory.builder()
+        var tsh = TransferStatusDetails.builder()
                 .status(BLOCKED)
                 .transfer(tx)
                 .reason(br.getReason())

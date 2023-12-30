@@ -2,6 +2,7 @@ package ma.ensa.transferservice.controllers;
 
 
 import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.dto.sms.PinTx;
 import ma.ensa.transferservice.dto.tx.ActionType;
 import ma.ensa.transferservice.dto.tx.SendDto;
 import ma.ensa.transferservice.dto.tx.TransferDto;
@@ -48,7 +49,7 @@ public class TransferControllerImpl implements TransferController {
         return service.getTransfer(ref);
     }
 
-    public List<Long> emitTransfer(SendDto dto, String byUser){
+    public List<PinTx> emitTransfer(SendDto dto, String byUser){
         dto.setUserId(byUser);
         return service.emitTransfer(dto);
     }

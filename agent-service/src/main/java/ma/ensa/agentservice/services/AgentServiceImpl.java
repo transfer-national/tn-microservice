@@ -5,6 +5,8 @@ import ma.ensa.agentservice.dto.AgentDto;
 import ma.ensa.agentservice.dto.BalanceDto;
 import ma.ensa.agentservice.dto.ThresholdDto;
 import ma.ensa.agentservice.exceptions.AgentNotFoundException;
+import ma.ensa.agentservice.exceptions.InsufficientBalanceException;
+import ma.ensa.agentservice.exceptions.ThresholdOverflowException;
 import ma.ensa.agentservice.models.Agent;
 import ma.ensa.agentservice.models.BackOffice;
 import ma.ensa.agentservice.models.ThresholdUpdate;
@@ -95,14 +97,12 @@ public class AgentServiceImpl implements AgentService{
 
             // check the threshold
             if(agent.getThreshold() < amount){
-                throw new RuntimeException("threshold overflow");
-                // TODO: create `ThresholdOverflowException` class
+                throw new ThresholdOverflowException();
             }
 
             // check the balance
             if(balance < amount){
-                throw new RuntimeException("insufficient balance ");
-                // TODO: create `InsufficientBalanceException` class
+                throw new InsufficientBalanceException();
             }
 
             // debit the balance
@@ -148,7 +148,5 @@ public class AgentServiceImpl implements AgentService{
         );
 
         return "THRESHOLD UPDATED SUCCESSFULLY";
-
     }
-
 }

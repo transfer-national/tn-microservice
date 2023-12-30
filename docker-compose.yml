@@ -3,9 +3,44 @@ version: '3.8'
 services:
     rabbitmq:
         image: rabbitmq:3-management
+        container_name: rabbitmq
         ports:
-            - "5672:5672"  # RabbitMQ default port
+            - "5672:5672"    # RabbitMQ default port
             - "15672:15672"  # RabbitMQ management plugin port (UI)
         environment:
             RABBITMQ_DEFAULT_USER: guest  # Replace with your desired username
             RABBITMQ_DEFAULT_PASS: guest  # Replace with your desired password
+        networks:
+            - microservice-net
+    db:
+        image: mysql
+        container_name: mysql-db
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: 12345678
+            MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: caching_sha2_password
+        volumes:
+            - db-data:/var/lib/mysql
+        networks:
+            - microservice-net
+    gateway:
+        build: ./gateway
+        container_name: gateway
+        environment:
+            EUREKA_URI: http://eureka/eureka
+        networks:
+            - microservice-net
+        depends_on:
+            - discovery
+    discovery:
+        build: ./discovery
+        container_name: discovery
+        networks:
+            - microservice-net
+volumes:
+    db-data:
+        name: db-data
+networks:
+    microservice-net:
+        name: microservice-net

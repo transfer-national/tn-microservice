@@ -25,7 +25,7 @@ public class AuthServiceApplication implements CommandLineRunner{
 
         if(userRepository.count() != 0) return;
 
-        BackOffice backOffice = BackOffice.builder()
+        var backOffice = BackOffice.builder()
                 .password(passwordEncoder.encode("mohcine19"))
                 .build();
 

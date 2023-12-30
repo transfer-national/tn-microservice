@@ -2,6 +2,7 @@ package ma.ensa.transferservice.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ma.ensa.transferservice.dto.*;
+import ma.ensa.transferservice.dto.sms.PinTx;
 import ma.ensa.transferservice.dto.tx.SendDto;
 import ma.ensa.transferservice.dto.tx.TransferDto;
 import ma.ensa.transferservice.dto.tx.TransferResponseDto;
@@ -37,7 +38,7 @@ public interface TransferController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    List<Long> emitTransfer(
+    List<PinTx> emitTransfer(
             @RequestBody SendDto dto,
             @RequestHeader("By-User") String byUser
     );

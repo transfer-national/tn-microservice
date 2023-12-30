@@ -21,7 +21,6 @@ public interface PinCodeController {
     List<PinTx> generatePinCodeForTx(@RequestBody List<PinTx> ptx);
 
 
-
     @PutMapping
     String validatePinCode(@RequestBody PinValid req);
 
