@@ -42,5 +42,4 @@ public class Agent extends Account {
     private LocalDateTime createdAt;
 
 
-
 }

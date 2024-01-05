@@ -17,6 +17,8 @@ public class AuthResponse {
 
     private String userId;
 
+    private AgentDto agent;
+
     private String token;
 
     private Role role;

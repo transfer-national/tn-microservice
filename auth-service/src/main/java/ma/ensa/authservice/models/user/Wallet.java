@@ -10,4 +10,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 @Entity
-public class Wallet extends Account{}
+public class Wallet extends Account{
+
+    @Override
+    public String getName() {
+        return "wallet";
+    }
+}

@@ -1,6 +1,7 @@
 package ma.ensa.authservice.services;
 
 import lombok.RequiredArgsConstructor;
+import ma.ensa.authservice.dto.AgentDto;
 import ma.ensa.authservice.dto.AuthRequest;
 import ma.ensa.authservice.dto.AuthResponse;
 import ma.ensa.authservice.models.user.User;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
 
@@ -21,6 +23,7 @@ public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
     public String setPassword(AuthRequest dto){
 
@@ -46,6 +49,8 @@ public class AuthService {
 
     public AuthResponse login(AuthRequest dto){
 
+        var id = dto.getUserId();
+
         var user = (User) userService.loadUserByUsername(dto.getUserId());
 
         // authenticate
@@ -56,9 +61,19 @@ public class AuthService {
             )
         );
 
+        if(id.startsWith("b")){
+            id = id.replace("b-", "a-");
+        }
+
+        var agent = restTemplate.getForObject(
+            "lb://agent-service/agent?user={id}",
+            AgentDto.class, id
+        );
+
         return AuthResponse.builder()
                 .role(user.getRole())
                 .token(jwtService.generateToken(user))
+                .agent(agent)
                 .build();
 
     }

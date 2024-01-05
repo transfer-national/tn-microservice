@@ -49,5 +49,6 @@ public class ClientDto {
 
     private String byAgentId; // id of the agent
 
+    private boolean isExpired;
 
 }

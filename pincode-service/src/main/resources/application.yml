@@ -4,7 +4,7 @@ spring:
         allow-bean-definition-overriding: true
 
     application:
-        name: notification-service
+        name: pin-code-service
 
     datasource:
         url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:tn}

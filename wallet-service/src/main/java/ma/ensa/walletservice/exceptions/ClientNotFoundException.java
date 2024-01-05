@@ -1,7 +1,7 @@
 package ma.ensa.walletservice.exceptions;
 
 public class ClientNotFoundException extends NotFoundException {
-    public ClientNotFoundException(Long clientRef) {
+    public ClientNotFoundException(String clientRef) {
         super("CLIENT NOT FOUND, id=" + clientRef);
     }
 }

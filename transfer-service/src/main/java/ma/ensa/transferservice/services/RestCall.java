@@ -68,10 +68,17 @@ public class RestCall {
 
     public List<PinTx> generatePinCode(List<PinTx> ptx){
 
-        var result = restTemplate.postForObject(
-            "lb://pin-code-service/tx",
-            ptx, PinTx[].class
-        );
+        PinTx[] result;
+
+        try{
+            result = restTemplate.postForObject(
+                    "lb://pin-code-service/pincode/tx",
+                    ptx, PinTx[].class
+            );
+        }catch (Exception ex){
+            return ptx;
+        }
+
 
         return Optional.ofNullable(result)
                 .map(List::of)
@@ -112,11 +119,6 @@ public class RestCall {
                 .phoneNumber(tx.getSender().getGsm())
                 .body(message)
                 .build();
-
-        restTemplate.postForObject(
-                "lb://pin-code-service/sms",
-                sms, Void.class
-        );
 
 
     }

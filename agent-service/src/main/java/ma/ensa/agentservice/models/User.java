@@ -28,6 +28,8 @@ public class User {
     public void init(){
         Random random = new Random();
 
+        if(id != null) return;
+
         id = "a-" + random.nextLong(
                 1_000_000_000L,
                 10_000_000_000L

@@ -11,12 +11,14 @@ import ma.ensa.agentservice.models.Agent;
 import ma.ensa.agentservice.models.BackOffice;
 import ma.ensa.agentservice.models.ThresholdUpdate;
 import ma.ensa.agentservice.repositories.AgentRepository;
+import ma.ensa.agentservice.repositories.BackOfficeRepository;
 import ma.ensa.agentservice.repositories.ThresholdRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static ma.ensa.agentservice.dto.OperationType.*;
 
@@ -26,6 +28,7 @@ public class AgentServiceImpl implements AgentService{
 
     private final AgentRepository agentRepository;
     private final ThresholdRepository thresholdRepository;
+    private final BackOfficeRepository backOfficeRepository;
     private final PasswordEncoder passwordEncoder;
 
     private AgentDto toDto(Agent agent){
@@ -46,7 +49,7 @@ public class AgentServiceImpl implements AgentService{
     public List<AgentDto> getAgents() {
 
         return agentRepository
-            .findAll()
+            .findAllByCreatedByIsNotNull()
             .stream()
             .map(this::toDto)
             .toList();
@@ -54,10 +57,7 @@ public class AgentServiceImpl implements AgentService{
 
     @Override
     public AgentDto getAgent(String user) {
-
-        return toDto(
-            getAgentEntity(user)
-        );
+        return toDto(getAgentEntity(user));
     }
 
     @Override
@@ -81,6 +81,34 @@ public class AgentServiceImpl implements AgentService{
         agent = agentRepository.save(agent);
 
         return "CREATED SUCCESSFULLY, agentId: " + agent.getId();
+    }
+
+    @Override
+    public String createAgentForBackOffice(AgentDto dto){
+
+        var agent = new Agent();
+
+        // copy the primitive properties
+        BeanUtils.copyProperties(dto, agent);
+
+        // set the id similar to backoffice id
+        var bid = dto.getCreatedBy();
+        var aid = bid.replace("b-", "a-");
+
+        agent.setId(aid);
+
+        // find the back office
+        var backOffice = backOfficeRepository
+                .findById(bid)
+                .orElseThrow();
+
+        agent = agentRepository.save(agent);
+
+        backOffice.setAgent(agent);
+
+        backOfficeRepository.save(backOffice);
+
+        return "CREATED SUCCESSFULLY for back office, agentId : " + agent.getId();
     }
 
     @Override

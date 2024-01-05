@@ -17,7 +17,6 @@ import static java.time.ZoneId.systemDefault;
 @Data
 public class JwtConfig {
 
-
     private String secretKey;
 
     private Long daysOfValidity;

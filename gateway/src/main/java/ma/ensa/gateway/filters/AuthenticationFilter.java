@@ -3,6 +3,7 @@ package ma.ensa.gateway.filters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ma.ensa.gateway.dto.AuthPrincipal;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -96,8 +97,8 @@ public class AuthenticationFilter implements WebFilter {
         return client.get()
                 .uri("/auth/validate?token={t}", token)
                 .retrieve()
-                .onStatus((h) -> h.is4xxClientError(), (r) -> {
-                    log.warn("9waaadt brojolla");
+                .onStatus(HttpStatusCode::is4xxClientError, (r) -> {
+                    log.warn("Authentication Error");
                     return Mono.just(new RuntimeException("3aaaa"));
                 })
                 .bodyToMono(AuthPrincipal.class);

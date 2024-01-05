@@ -48,6 +48,9 @@ public abstract class User implements UserDetails {
     }
 
 
+    public abstract String getName();
+
+
     public Role getRole(){
         return Enum.valueOf(
             Role.class,

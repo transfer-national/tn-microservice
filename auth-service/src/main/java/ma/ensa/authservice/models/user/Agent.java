@@ -13,4 +13,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 @Entity
-public class Agent extends Account{}
+public class Agent extends Account{
+
+    private String name;
+
+    @Override
+    public String getName() {
+        return null;
+    }
+}

@@ -53,10 +53,10 @@ spring:
                     - Path=/agent/**
 
                 # notification service
-                - id: notification
-                  uri: lb://notification-service
+                - id: pincode
+                  uri: lb://pin-code-service
                   predicates:
-                    - Path=/notification/**
+                    - Path=/pincode/**
 
                 # sms service
                 - id: sms

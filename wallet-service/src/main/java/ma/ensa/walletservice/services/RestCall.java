@@ -22,10 +22,10 @@ public class RestCall {
 
     private final RestTemplate restTemplate;
 
-    public ClientDto getClient(Long clientRef) {
+    public ClientDto getClient(String clientRef) {
 
         var clientEntity  = restTemplate.getForEntity(
-                "lb://client-service/client/{ref}",
+                "lb://client-service/client/cin/{ref}",
                 ClientDto.class, clientRef
         );
 

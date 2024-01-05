@@ -65,7 +65,7 @@ public class TransferServiceImpl implements TransferService {
                 .status(status)
                 .build();
 
-        rest.sendStatusViaSMS(tx, status);
+        //rest.sendStatusViaSMS(tx, status);
 
         tsdRepository.save(statusDetails);
     }
@@ -131,7 +131,7 @@ public class TransferServiceImpl implements TransferService {
 
 
 
-        return rest.generatePinCode(ptx);
+        return ptx;
     }
 
     @Override

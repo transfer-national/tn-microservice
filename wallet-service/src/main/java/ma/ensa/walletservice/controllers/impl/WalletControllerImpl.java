@@ -22,7 +22,7 @@ public class WalletControllerImpl implements WalletController {
 
     @Override
     public String createWallet(WalletDto dto) {
-        return service.createWallet(dto.getClientRef());
+        return service.createWallet(dto.getCin());
     }
 
     @Override

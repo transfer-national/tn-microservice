@@ -64,8 +64,12 @@ public class ClientServiceImpl implements ClientService {
                 .findById(id)
                 .orElseThrow(ClientNotFoundException::new);
 
+        // TODO: implement a mechanism of checking a transfer state
+        boolean expired = isExpired(client.getUpdatedAt());
+
         return new ClientDto(){{
             copyProperties(client, this);
+            setExpired(expired);
         }};
     }
     @Override
@@ -75,8 +79,11 @@ public class ClientServiceImpl implements ClientService {
                 .findByIdNumber(idNumber)
                 .orElseThrow(ClientNotFoundException::new);
 
+        boolean expired = isExpired(client.getUpdatedAt());
+
         return new ClientDto(){{
             copyProperties(client, this);
+            setExpired(expired);
         }};
     }
 

@@ -18,6 +18,8 @@ public class WalletDto {
 
     private Long clientRef;
 
+    private String cin;
+
     private ClientDto client;
 
     private Double balance;

@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ClientDto {
 
+    private Long ref;
+
     private String firstName;
 
     private String lastName;

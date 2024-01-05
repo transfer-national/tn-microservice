@@ -20,4 +20,10 @@ public class Client {
     @Id
     private Long ref;
 
+    private String idNumber;
+
+    public Client(Long ref){
+        this.ref = ref;
+    }
+
 }

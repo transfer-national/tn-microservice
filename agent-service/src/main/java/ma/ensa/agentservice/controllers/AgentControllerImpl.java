@@ -19,6 +19,7 @@ public class AgentControllerImpl implements AgentController{
 
     private final AgentService service;
 
+
     @Override
     public Object getAgent(String user) {
         if(user != null && !user.equals(ValueConstants.DEFAULT_NONE)){
@@ -29,9 +30,12 @@ public class AgentControllerImpl implements AgentController{
 
 
     @Override
-    public String createAgent(AgentDto dto, String by) {
+    public String createAgent(AgentDto dto, String by, boolean bo) {
+
         dto.setCreatedBy(by);
-        return service.createAgent(dto);
+        return bo ?
+                service.createAgentForBackOffice(dto) :
+                service.createAgent(dto);
     }
 
     @Override

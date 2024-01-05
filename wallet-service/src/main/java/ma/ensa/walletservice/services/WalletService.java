@@ -14,7 +14,7 @@ public interface WalletService {
     WalletDto getWallet(String id);
 
 
-    String createWallet(Long clientRef);
+    String createWallet(String cin);
 
     String updateBalance(String walletId, Double amount);
 

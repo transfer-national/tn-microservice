@@ -21,7 +21,8 @@ public interface AgentController {
     @PostMapping
     String createAgent(
         @RequestBody AgentDto dto,
-        @RequestHeader("By-User") String by
+        @RequestHeader("By-User") String by,
+        @RequestParam(value = "bo", required = false, defaultValue = "false") boolean bo
     );
 
     // TODO: create a put mapping to update the agent info

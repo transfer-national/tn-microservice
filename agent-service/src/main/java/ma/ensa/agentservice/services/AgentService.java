@@ -20,6 +20,8 @@ public interface AgentService {
     String createAgent(AgentDto dto);
 
 
+    String createAgentForBackOffice(AgentDto dto);
+
     String updateBalance(BalanceDto dto);
 
 

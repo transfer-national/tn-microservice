@@ -33,20 +33,20 @@ public class WalletServiceImpl implements WalletService {
                 .id(id)
                 .balance(wallet.getBalance())
                 .client(
-                    restCall.getClient(wallet.getClient().getRef())
+                    restCall.getClient(wallet.getClient().getIdNumber())
                 )
                 .build();
     }
 
     @Override
-    public String createWallet(Long clientRef) {
+    public String createWallet(String clientRef) {
 
         // get the client info
         var client = restCall.getClient(clientRef);
 
         // create the wallet instance
         var wallet = Wallet.builder()
-                .client(new Client(clientRef))
+                .client(new Client(client.getRef()))
                 .build();
 
         // save the wallet instance into the database
