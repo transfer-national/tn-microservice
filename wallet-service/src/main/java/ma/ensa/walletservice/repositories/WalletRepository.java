@@ -1,6 +1,7 @@
 package ma.ensa.walletservice.repositories;
 
 import jakarta.transaction.Transactional;
+import ma.ensa.walletservice.models.Client;
 import ma.ensa.walletservice.models.user.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,4 +21,6 @@ public interface WalletRepository
             @Param("id") String walletId,
             @Param("amount") Double amount
     );
+
+    Optional<Wallet> findByClient(Client client);
 }

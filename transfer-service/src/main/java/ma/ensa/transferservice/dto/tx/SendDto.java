@@ -36,6 +36,8 @@ public class SendDto extends TransferDto {
 
         private FeeType feeType;
 
+        private String reason;
+
         private boolean notificationEnabled;
     }
 

@@ -1,0 +1,10 @@
+### create a wallet
+POST localhost:8080/wallet
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+{
+  "cin": "HH125495",
+  "balance": 200.0
+}

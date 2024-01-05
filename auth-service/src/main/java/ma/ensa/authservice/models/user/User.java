@@ -24,7 +24,6 @@ import static jakarta.persistence.InheritanceType.TABLE_PER_CLASS;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @SuperBuilder
 
 @Inheritance(strategy = JOINED)

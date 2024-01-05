@@ -19,4 +19,6 @@ public class ClientDto {
 
     private String gsm;
 
+    private boolean hasWallet;
+
 }

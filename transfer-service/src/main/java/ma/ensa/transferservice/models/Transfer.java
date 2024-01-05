@@ -42,6 +42,8 @@ public class Transfer{
 
     private boolean notificationEnabled;
 
+    private String reason;
+
     private long groupId;
 
     @OneToMany(mappedBy = "transfer", fetch = EAGER)

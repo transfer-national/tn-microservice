@@ -26,6 +26,7 @@ public class RecipientServiceImpl implements RecipientService {
     public RecipientDto toDto(Recipient recipient){
 
         return RecipientDto.builder()
+                .id(recipient.getId())
                 .firstName(recipient.getFirstName())
                 .lastName(recipient.getLastName())
                 .phoneNumber(recipient.getPhoneNumber())

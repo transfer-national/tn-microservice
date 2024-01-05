@@ -7,6 +7,7 @@ import ma.ensa.clientservice.models.Client;
 import ma.ensa.clientservice.models.user.Agent;
 import ma.ensa.clientservice.repositories.ClientRepository;
 import ma.ensa.clientservice.service.ClientService;
+import ma.ensa.clientservice.service.RestCall;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class ClientServiceImpl implements ClientService {
 
 
     private final ClientRepository clientRepository;
+    private final RestCall restCall;
 
     @Value("${years-of-validity}")
     private int yearsOfValidity;
@@ -67,9 +69,13 @@ public class ClientServiceImpl implements ClientService {
         // TODO: implement a mechanism of checking a transfer state
         boolean expired = isExpired(client.getUpdatedAt());
 
+        // has the wallet
+        boolean hasWallet = restCall.hasTheWallet(client.getRef());
+
         return new ClientDto(){{
             copyProperties(client, this);
             setExpired(expired);
+            setHasWallet(hasWallet);
         }};
     }
     @Override

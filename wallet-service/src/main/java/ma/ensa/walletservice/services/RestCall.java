@@ -29,6 +29,8 @@ public class RestCall {
                 ClientDto.class, clientRef
         );
 
+        log.info("there we gooooo");
+
         return Optional.of(clientEntity)
                 .filter(e -> e.getStatusCode() == valueOf(200))
                 .map(HttpEntity::getBody)
@@ -47,7 +49,7 @@ public class RestCall {
 
         // call the auth service to set the password
         var response = restTemplate.exchange(
-                "lb://auth-service/password",
+                "lb://auth-service/auth/password",
                 HttpMethod.PUT,
                 new HttpEntity<>(body),
                 String.class

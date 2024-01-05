@@ -28,6 +28,9 @@ Authorization: Bearer {{token}}
   "dob": "2001-01-19"
 }
 
+### get the client by cin
+GET localhost:8080/client/cin/HH125495
+
 ### get the client where id = 1
 GET localhost:8080/recipient/2
 

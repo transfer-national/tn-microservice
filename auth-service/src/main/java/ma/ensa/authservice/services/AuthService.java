@@ -61,14 +61,21 @@ public class AuthService {
             )
         );
 
+
+
         if(id.startsWith("b")){
             id = id.replace("b-", "a-");
         }
 
-        var agent = restTemplate.getForObject(
-            "lb://agent-service/agent?user={id}",
-            AgentDto.class, id
-        );
+        AgentDto agent = null;
+
+        try{
+            agent = restTemplate.getForObject(
+                    "lb://agent-service/agent?user={id}",
+                    AgentDto.class, id
+            );
+        }catch(Exception ignored){}
+
 
         return AuthResponse.builder()
                 .role(user.getRole())

@@ -28,7 +28,7 @@ services:
         build: ./gateway
         container_name: gateway
         environment:
-            EUREKA_URI: http://eureka/eureka
+            EUREKA_URI: http://discovery/eureka
         networks:
             - microservice-net
         depends_on:

@@ -1,6 +1,7 @@
 package ma.ensa.walletservice.controllers.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ma.ensa.walletservice.controllers.WalletController;
 import ma.ensa.walletservice.dto.WalletDto;
 import ma.ensa.walletservice.services.WalletService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/wallet")
 @RequiredArgsConstructor
+@Slf4j
 public class WalletControllerImpl implements WalletController {
 
     private final WalletService service;
@@ -22,7 +24,8 @@ public class WalletControllerImpl implements WalletController {
 
     @Override
     public String createWallet(WalletDto dto) {
-        return service.createWallet(dto.getCin());
+        log.info("the endpoint is triggered");
+        return service.createWallet(dto);
     }
 
     @Override
@@ -30,5 +33,10 @@ public class WalletControllerImpl implements WalletController {
         return service.updateBalance(
                 dto.getId(), dto.getAmount()
         );
+    }
+
+    @Override
+    public boolean hasTheWallet(Long ref) {
+        return service.hasTheWallet(ref);
     }
 }

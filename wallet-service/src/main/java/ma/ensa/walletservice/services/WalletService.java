@@ -14,12 +14,10 @@ public interface WalletService {
     WalletDto getWallet(String id);
 
 
-    String createWallet(String cin);
+    String createWallet(WalletDto dto);
 
     String updateBalance(String walletId, Double amount);
 
 
-
-
-
+    boolean hasTheWallet(Long ref);
 }

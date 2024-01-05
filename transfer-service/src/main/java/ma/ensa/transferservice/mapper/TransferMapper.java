@@ -38,6 +38,7 @@ public class TransferMapper {
                 .amount(ut.getAmount())
                 .notificationEnabled(ut.isNotificationEnabled())
                 .feeType(ut.getFeeType())
+                .reason(ut.getReason())
                 .build()
             )
             .toList();

@@ -39,18 +39,20 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public String createWallet(String clientRef) {
+    public String createWallet(WalletDto dto) {
 
         // get the client info
-        var client = restCall.getClient(clientRef);
+        var client = restCall.getClient(dto.getCin());
 
         // create the wallet instance
         var wallet = Wallet.builder()
                 .client(new Client(client.getRef()))
+                .balance(dto.getBalance())
                 .build();
 
         // save the wallet instance into the database
         var id = walletRepository.save(wallet).getId();
+
 
         // generate the password
         var password = generatePassword();
@@ -88,6 +90,15 @@ public class WalletServiceImpl implements WalletService {
                 "BALANCE UPDATED SUCCESSFULLY, id = %s, new balance = %f",
                 walletId, (balance + amount)
         );
+    }
+
+    @Override
+    public boolean hasTheWallet(Long ref) {
+        var client = new Client(ref);
+        return walletRepository
+                .findByClient(client)
+                .isPresent();
+
     }
 
     private Wallet getWalletInstance(String id){

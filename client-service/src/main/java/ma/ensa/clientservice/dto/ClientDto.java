@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class ClientDto {
 
-
     private long ref;
 
     private Title title; // enum
@@ -50,5 +49,7 @@ public class ClientDto {
     private String byAgentId; // id of the agent
 
     private boolean isExpired;
+
+    private boolean hasWallet;
 
 }
