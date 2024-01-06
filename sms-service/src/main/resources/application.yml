@@ -1,0 +1,25 @@
+spring:
+    main:
+        allow-bean-definition-overriding: true
+
+    application:
+        name: sms-service
+
+    rabbitmq:
+        host: ${RABBIT_HOST:localhost}
+        port: ${RABBIT_PORT:5672}
+        username: ${RABBIT_USER:guest}
+        password: ${RABBIT_PASS:guest}
+
+sms-service:
+    queue: q.sms
+    exchange: e.receiver
+    routing-key: r.direct
+
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://${EUREKA_URL:localhost:8761}/eureka/
+server:
+    port: 0

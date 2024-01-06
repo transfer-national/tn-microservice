@@ -1,0 +1,35 @@
+### make a transfer
+POST localhost:8080/transfer
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "senderRef": 2,
+  "transferType": "CASH",
+  "unitTransfers": [
+    {
+      "recipientId": 1,
+      "amount": 1000,
+      "feeType": "SENDER",
+      "notificationEnabled": true
+    },
+    {
+      "recipientId": 2,
+      "amount": 1000,
+      "feeType": "SENDER",
+      "notificationEnabled": true
+    }
+  ]
+}
+
+### get all the transfers
+GET localhost:8080/transfer
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{}
+
+
+### get the transfer by id
+GET localhost:8080/transfer/2249567671845
+Authorization: Bearer {{token}}

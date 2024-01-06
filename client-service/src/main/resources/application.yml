@@ -1,0 +1,27 @@
+spring:
+    application:
+        name: client-service
+
+
+    datasource:
+        url: jdbc:mysql://localhost:3300/clients_db?useSSL=false
+        username: root
+        password: RIMrim2001@
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        database-platform: org.hibernate.dialect.MySQLDialect
+        open-in-view: false
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://${EUREKA_URL:localhost:8761}/eureka/
+
+server:
+    port: 8888
+
+years-of-validity: 2

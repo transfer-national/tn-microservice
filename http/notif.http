@@ -1,0 +1,11 @@
+### send a simple message
+POST localhost:8080/notification/sms
+Content-Type: application/json
+
+{
+  "phoneNumber": "+212704261627",
+  "body": "microservice project d allah y7san l3wan"
+}
+
+### connect to the sms service
+GET localhost:8080/app-gw
