@@ -47,9 +47,15 @@ public class ClientServiceImpl implements ClientService {
         // copy the properties into the client instance
         copyProperties(dto, client);
 
+
+        var agentId = dto.getByAgentId();
+        if(agentId.startsWith("b-")){
+            agentId = agentId.replace("b-", "a-");
+        }
+
         // add the agent instance
         client.setCreatedBy(
-                new Agent(dto.getByAgentId())
+                new Agent(agentId)
         );
 
         // save the instance into the database

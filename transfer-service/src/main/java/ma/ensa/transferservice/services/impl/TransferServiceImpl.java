@@ -109,7 +109,7 @@ public class TransferServiceImpl implements TransferService {
                 .sum();
 
         if (dto.getTransferType() == CASH) {
-            rest.updateAgentBalance(dto.getUserId(), -amount);
+            rest.updateAgentBalance(dto.getUserId(), amount);
         } else {
             amount += fees;
             rest.updateWalletBalance(dto.getSenderRef(), -amount);

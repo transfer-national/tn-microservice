@@ -93,11 +93,12 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public boolean hasTheWallet(Long ref) {
+    public String hasTheWallet(Long ref) {
         var client = new Client(ref);
         return walletRepository
                 .findByClient(client)
-                .isPresent();
+                .map((w) -> "exists")
+                .orElse("");
 
     }
 

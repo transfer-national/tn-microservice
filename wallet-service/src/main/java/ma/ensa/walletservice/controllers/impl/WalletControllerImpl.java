@@ -36,7 +36,7 @@ public class WalletControllerImpl implements WalletController {
     }
 
     @Override
-    public boolean hasTheWallet(Long ref) {
+    public String hasTheWallet(Long ref) {
         return service.hasTheWallet(ref);
     }
 }

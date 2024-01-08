@@ -47,7 +47,8 @@ public interface TransferController {
     Object updateStatus(
         @PathVariable(required = false) Long ref,
         @PathVariable String action,
-        @RequestBody TransferDto dto
+        @RequestBody TransferDto dto,
+        @RequestHeader("By-User") String byUser
     );
 
 }

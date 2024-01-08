@@ -21,7 +21,7 @@ public interface WalletController {
     @PutMapping("/balance")
     String updateWalletBalance(@RequestBody WalletDto dto);
 
-    @GetMapping("exists/{ref}")
-    boolean hasTheWallet(@PathVariable Long ref);
+    @GetMapping("/exists/{ref}")
+    String hasTheWallet(@PathVariable Long ref);
 
 }

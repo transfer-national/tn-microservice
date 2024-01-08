@@ -35,7 +35,7 @@ public class TransferChecker {
 
         if(!(
                 sendingDate.isEqual(LocalDate.now()) &&
-                        sendingDetails.getByUser().equals(userNow))
+                (sendingDetails.getByUser().equals(userNow) || byUser.startsWith("b-")))
         ) {
             throw new RuntimeException("you cannot revert this transfer");
         }

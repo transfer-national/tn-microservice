@@ -16,11 +16,10 @@ public class RestCall {
 
         var result = restTemplate.getForObject(
                 "lb://wallet-service/wallet/exists/{ref}",
-                Boolean.class, ref
+                String.class, ref
         );
 
-        return Optional.ofNullable(result)
-                .orElse(false);
+        return result != null && !result.isEmpty();
 
     }
 

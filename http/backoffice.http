@@ -3,7 +3,7 @@ POST localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "userId": "a-6230265944",
+  "userId": "a-6973233131",
   "password": "mohcine01"
 }
 
@@ -16,9 +16,9 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "dounia aissi",
-  "email": "dounia@aissi.ma",
-  "phoneNumber": "212804261628",
+  "name": "fatimezzahra saad",
+  "email": "fezz@ebanking.ma",
+  "phoneNumber": "21204261628",
   "balance": 1000000000,
   "threshold": 80000
 }

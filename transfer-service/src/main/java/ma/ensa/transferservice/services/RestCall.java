@@ -2,10 +2,8 @@ package ma.ensa.transferservice.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import ma.ensa.transferservice.dto.ClientDto;
+import ma.ensa.transferservice.dto.*;
 import ma.ensa.transferservice.dto.sms.PinTx;
-import ma.ensa.transferservice.dto.RecipientDto;
-import ma.ensa.transferservice.dto.SironResponseDto;
 import ma.ensa.transferservice.dto.sms.SMS;
 import ma.ensa.transferservice.exceptions.BlackListedException;
 import ma.ensa.transferservice.models.Client;
@@ -55,6 +53,18 @@ public class RestCall {
 
     public void updateAgentBalance(String agentId, double amount){
 
+        if(agentId.startsWith("b-")){
+            agentId = agentId.replace("b-", "a-");
+        }
+
+        var dto = BalanceDto.builder()
+                .agentId(agentId)
+                .amount(amount)
+                .type( amount > 0 ? OperationType.CREDIT : OperationType.DEBIT)
+                .build();
+
+
+        restTemplate.put("lb://agent-service/agent/balance", dto);
 
     }
 

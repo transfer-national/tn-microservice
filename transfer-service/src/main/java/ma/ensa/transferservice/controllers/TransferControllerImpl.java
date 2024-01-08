@@ -50,14 +50,19 @@ public class TransferControllerImpl implements TransferController {
     }
 
     public List<PinTx> emitTransfer(SendDto dto, String byUser){
+        if(byUser.startsWith("b-")){
+            byUser = byUser.replace("b-", "a-");
+        }
         dto.setUserId(byUser);
+
         return service.emitTransfer(dto);
     }
 
-    public Object updateStatus(Long ref, String action, TransferDto dto) {
+    public Object updateStatus(Long ref, String action, TransferDto dto, String byUser) {
         if(ref != null) dto.setRef(ref);
         var action_ = Enum.valueOf(ActionType.class, action.toUpperCase());
         dto.setActionType(action_);
+        dto.setUserId(byUser);
         return updaters.get(action_).apply(dto);
     }
 

@@ -19,5 +19,5 @@ public interface WalletService {
     String updateBalance(String walletId, Double amount);
 
 
-    boolean hasTheWallet(Long ref);
+    String hasTheWallet(Long ref);
 }
